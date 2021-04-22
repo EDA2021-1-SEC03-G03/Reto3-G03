@@ -28,14 +28,13 @@
 import config as cf
 from DISClib.ADT import list as lt
 from DISClib.ADT import orderedmap as om
-from DISClib.ADT import map as m
 from DISClib.DataStructures import mapentry as me
-import datetime
 assert cf
 # from DISClib.Algorithms.Sorting import shellsort as sa
 
 """
-Se define la estructura de un catálogo de videos. El catálogo tendrá dos listas, una para los videos, otra para las categorias de
+Se define la estructura de un catálogo de videos. El catálogo tendrá dos lists,
+una para los videos, otra para las categorias de
 los mismos.
 """
 
@@ -47,97 +46,73 @@ los mismos.
 def newAnalyzer():
     """ Inicializa el analizador
 
-    Crea una lista vacia para guardar todos los crimenes
+    Crea una lista vacia para guardar todas las pistas
     Se crean indices (Maps) por los siguientes criterios:
-    -Fechas
+    -track_id
 
     Retorna el analizador inicializado.
     """
-    analyzer = {'crimes': None,
-                'dateIndex': None
+    analyzer = {'tracks': None,
+                'idIndex': None
                 }
 
-    analyzer['crimes'] = lt.newList('SINGLE_LINKED', compareIds)
-    analyzer['dateIndex'] = om.newMap(omaptype='RBT',
-                                      comparefunction=compareDates)
+    analyzer['tracks'] = lt.newList('SINGLE_LINKED', compareIds)
+    analyzer['idIndex'] = om.newMap(omaptype='RBT',
+                                    comparefunction=compareDates)
     return analyzer
 
 
 # Funciones para agregar informacion al catalogo
 
 
-def addCrime(analyzer, crime):
+def addCrime(analyzer, track):
     """
     """
-    lt.addLast(analyzer['crimes'], crime)
-    updateDateIndex(analyzer['dateIndex'], crime)
+    lt.addLast(analyzer['tracks'], track)
+    updateIdIndex(analyzer['idIndex'], track)
     return analyzer
 
 
-def updateDateIndex(map, crime):
+def updateIdIndex(maps, track):
     """
-    Se toma la fecha del crimen y se busca si ya existe en el arbol
-    dicha fecha.  Si es asi, se adiciona a su lista de crimenes
-    y se actualiza el indice de tipos de crimenes.
+    Se toma El track id de cada track y se adiciona al map
+    . Si el track ya esta en el arbol, se adiciona a su lista
+    respectiva y se actualiza el index.
 
-    Si no se encuentra creado un nodo para esa fecha en el arbol
-    se crea y se actualiza el indice de tipos de crimenes
+    Si no se encuentra creado un nodo para ese id en el arbol
+    se crea y se actualiza el indice del id de las pistas.
     """
-    occurreddate = crime['OCCURRED_ON_DATE']
-    crimedate = datetime.datetime.strptime(occurreddate, '%Y-%m-%d %H:%M:%S')
-    entry = om.get(map, crimedate.date())
+    trackId = track['track_id']
+    entry = om.get(maps, trackId)
     if entry is None:
-        datentry = newDataEntry(crime)
-        om.put(map, crimedate.date(), datentry)
+        datantry = newDataEntry(track)
+        om.put(maps, trackId, datantry)
     else:
-        datentry = me.getValue(entry)
-    addDateIndex(datentry, crime)
-    return map
+        datantry = me.getValue(entry)
+    addIdIndex(datantry, track)
+    return maps
 
 
-def addDateIndex(datentry, crime):
+def addIdIndex(datantry, track):
     """
     Actualiza un indice de tipo de crimenes.  Este indice tiene una lista
     de crimenes y una tabla de hash cuya llave es el tipo de crimen y
     el valor es una lista con los crimenes de dicho tipo en la fecha que
     se está consultando (dada por el nodo del arbol)
     """
-    lst = datentry['lstcrimes']
-    lt.addLast(lst, crime)
-    offenseIndex = datentry['offenseIndex']
-    offentry = m.get(offenseIndex, crime['OFFENSE_CODE_GROUP'])
-    if (offentry is None):
-        entry = newOffenseEntry(crime['OFFENSE_CODE_GROUP'], crime)
-        lt.addLast(entry['lstoffenses'], crime)
-        m.put(offenseIndex, crime['OFFENSE_CODE_GROUP'], entry)
-    else:
-        entry = me.getValue(offentry)
-        lt.addLast(entry['lstoffenses'], crime)
-    return datentry
+    lst = datantry['lsttracks']
+    lt.addLast(lst, track)
 
 
-def newDataEntry(crime):
+def newDataEntry(track):
     """
-    Crea una entrada en el indice por fechas, es decir en el arbol
+    Crea una entrada en el indice por track_id, es decir en el arbol
     binario.
     """
-    entry = {'offenseIndex': None, 'lstcrimes': None}
-    entry['offenseIndex'] = m.newMap(numelements=30,
-                                     maptype='PROBING',
-                                     comparefunction=compareOffenses)
-    entry['lstcrimes'] = lt.newList('SINGLE_LINKED', compareDates)
+    entry = {'lsttracks': None}
+
+    entry['lsttracks'] = lt.newList('ARRAY_LIST')
     return entry
-
-
-def newOffenseEntry(offensegrp, crime):
-    """
-    Crea una entrada en el indice por tipo de crimen, es decir en
-    la tabla de hash, que se encuentra en cada nodo del arbol.
-    """
-    ofentry = {'offense': None, 'lstoffenses': None}
-    ofentry['offense'] = offensegrp
-    ofentry['lstoffenses'] = lt.newList('SINGLELINKED', compareOffenses)
-    return ofentry
 
 
 # ==============================
@@ -145,64 +120,39 @@ def newOffenseEntry(offensegrp, crime):
 # ==============================
 
 
-def crimesSize(analyzer):
+def sizeTracks(analyzer):
     """
     Número de crimenes
     """
-    return lt.size(analyzer['crimes'])
+    return lt.size(analyzer['tracks'])
 
 
 def indexHeight(analyzer):
     """
     Altura del arbol
     """
-    return om.height(analyzer['dateIndex'])
+    return om.height(analyzer['idIndex'])
 
 
 def indexSize(analyzer):
     """
     Numero de elementos en el indice
     """
-    return om.size(analyzer['dateIndex'])
+    return om.size(analyzer['idIndex'])
 
 
 def minKey(analyzer):
     """
     Llave mas pequena
     """
-    return om.minKey(analyzer['dateIndex'])
+    return om.minKey(analyzer['idIndex'])
 
 
 def maxKey(analyzer):
     """
     Llave mas grande
     """
-    return om.maxKey(analyzer['dateIndex'])
-
-
-def getCrimesByRange(analyzer, initialDate, finalDate):
-    """
-    Retorna el numero de crimenes en un rago de fechas.
-    """
-    lst = om.values(analyzer['dateIndex'], initialDate, finalDate)
-    totcrimes = 0
-    for lstdate in lt.iterator(lst):
-        totcrimes += lt.size(lstdate['lstcrimes'])
-    return totcrimes
-
-
-def getCrimesByRangeCode(analyzer, initialDate, offensecode):
-    """
-    Para una fecha determinada, retorna el numero de crimenes
-    de un tipo especifico.
-    """
-    crimedate = om.get(analyzer['dateIndex'], initialDate)
-    if crimedate['key'] is not None:
-        offensemap = me.getValue(crimedate)['offenseIndex']
-        numoffenses = m.get(offensemap, offensecode)
-        if numoffenses is not None:
-            return m.size(me.getValue(numoffenses)['lstoffenses'])
-    return 0
+    return om.maxKey(analyzer['idIndex'])
 
 
 # ==============================
@@ -232,17 +182,3 @@ def compareDates(date1, date2):
         return 1
     else:
         return -1
-
-
-def compareOffenses(offense1, offense2):
-    """
-    Compara dos tipos de crimenes
-    """
-    offense = me.getKey(offense2)
-    if (offense1 == offense):
-        return 0
-    elif (offense1 > offense):
-        return 1
-    else:
-        return -1
-

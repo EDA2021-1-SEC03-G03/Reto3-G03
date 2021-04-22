@@ -22,7 +22,6 @@
 
 import config as cf
 import model
-import datetime
 import csv
 
 
@@ -65,11 +64,11 @@ def loadData(analyzer, crimesfile):
 # ___________________________________________________
 
 
-def crimesSize(analyzer):
+def sizeTracks(analyzer):
     """
     Numero de crimenes leidos
     """
-    return model.crimesSize(analyzer)
+    return model.sizeTracks(analyzer)
 
 
 def indexHeight(analyzer):
@@ -98,24 +97,3 @@ def maxKey(analyzer):
     La mayor llave del arbol
     """
     return model.maxKey(analyzer)
-
-
-def getCrimesByRange(analyzer, initialDate, finalDate):
-    """
-    Retorna el total de crimenes en un rango de fechas
-    """
-    initialDate = datetime.datetime.strptime(initialDate, '%Y-%m-%d')
-    finalDate = datetime.datetime.strptime(finalDate, '%Y-%m-%d')
-    return model.getCrimesByRange(analyzer, initialDate.date(),
-                                  finalDate.date())
-
-
-def getCrimesByRangeCode(analyzer, initialDate,
-                         offensecode):
-    """
-    Retorna el total de crimenes de un tipo especifico en una
-    fecha determinada
-    """
-    initialDate = datetime.datetime.strptime(initialDate, '%Y-%m-%d')
-    return model.getCrimesByRangeCode(analyzer, initialDate.date(),
-                                      offensecode)

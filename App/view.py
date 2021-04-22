@@ -24,7 +24,6 @@ import config as cf
 import sys
 import controller
 assert cf
-# from DISClib.ADT import list as lt
 
 
 """
@@ -39,7 +38,7 @@ operación solicitada
 # ___________________________________________________
 
 
-file = 'Pendiente.csv'
+file = 'context_content_features-small.csv'
 cont = None
 # ___________________________________________________
 #  Menu principal
@@ -51,11 +50,15 @@ def printMenu():
     print("*******************************************")
     print("Bienvenido")
     print("1- Inicializar Analizador")
-    print("2- Cargar información de crimenes")
-    print("3- Consultar crimenes en un rango de fechas")
-    print("4- Consultar crimenes por codigo y fecha")
+    print("2- Proximamente en cinees")
+    print("3- Despues de la anterior viene esta")
+    print("4- Esta es una secuela de la anterior")
+    print("4- Episodio Final")
     print("0- Salir")
     print("*******************************************")
+
+
+# def printFirstLast5(cont):
 
 
 """
@@ -71,9 +74,9 @@ while True:
         cont = controller.init()
 
     elif int(inputs[0]) == 2:
-        print("\nCargando información de crimenes ....")
+        print("\nCargando información de las pistas ....")
         controller.loadData(cont, file)
-        print('Crimenes cargados: ' + str(controller.crimesSize(cont)))
+        print('pistas cargadas: ' + str(controller.sizeTracks(cont)))
         print('Altura del arbol: ' + str(controller.indexHeight(cont)))
         print('Elementos en el arbol: ' + str(controller.indexSize(cont)))
         print('Menor Llave: ' + str(controller.minKey(cont)))
@@ -85,15 +88,6 @@ while True:
         finalDate = input("Fecha Final (YYYY-MM-DD): ")
         total = controller.getCrimesByRange(cont, initialDate, finalDate)
         print("\nTotal de crimenes en el rango de fechas: " + str(total))
-
-    elif int(inputs[0]) == 4:
-        print("\nBuscando crimenes x grupo de ofensa en una fecha: ")
-        initialDate = input("Fecha (YYYY-MM-DD): ")
-        offensecode = input("Ofensa: ")
-        numoffenses = controller.getCrimesByRangeCode(cont, initialDate,
-                                                      offensecode)
-        print("\nTotal de ofensas tipo: " + offensecode + " en esa fecha:  " +
-              str(numoffenses))
 
     else:
         sys.exit(0)
