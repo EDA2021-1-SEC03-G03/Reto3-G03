@@ -58,7 +58,15 @@ def printMenu():
     print("*******************************************")
 
 
-# def printFirstLast5(cont):
+def printFirstsLastsElements(least5, greater5):
+
+    print('\nThe last 5 elements are:')
+    for i in least5:
+        print(i['track_id'])
+
+    print('\nThe first 5 elements are:')
+    for j in greater5:
+        print(j['track_id'])
 
 
 """
@@ -81,6 +89,9 @@ while True:
         print('Elementos en el arbol: ' + str(controller.indexSize(cont)))
         print('Menor Llave: ' + str(controller.minKey(cont)))
         print('Mayor Llave: ' + str(controller.maxKey(cont)))
+        elements = controller.leastMaxElements(cont)
+        printFirstsLastsElements(elements[0],
+                                 elements[1])
 
     elif int(inputs[0]) == 3:
         print("\nBuscando crimenes en un rango de fechas: ")

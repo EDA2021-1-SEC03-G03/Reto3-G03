@@ -70,6 +70,7 @@ def addTrack(analyzer, track):
     """
     lt.addLast(analyzer['tracks'], track)
     updateIdIndex(analyzer['idIndex'], track)
+
     return analyzer
 
 
@@ -154,6 +155,24 @@ def maxKey(analyzer):
     """
     return om.maxKey(analyzer['idIndex'])
 
+
+def leastMaxElements(analyzer):
+
+    leastList = []
+
+    i = lt.size(analyzer['tracks'])
+    while i > lt.size(analyzer['tracks']) - 5:
+        leastList.append(lt.getElement(analyzer['tracks'], i))
+        i -= 1
+
+    greaterList = []
+
+    i = 0
+    while i < 5:
+        greaterList.append(lt.getElement(analyzer['tracks'], i))
+        i += 1
+
+    return (leastList, greaterList)
 
 # ==============================
 # Funciones de Comparacion

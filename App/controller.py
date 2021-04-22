@@ -97,3 +97,10 @@ def maxKey(analyzer):
     La mayor llave del arbol
     """
     return model.maxKey(analyzer)
+
+
+def leastMaxElements(analyzer):
+    """
+    La mayor llave del arbol
+    """
+    return model.leastMaxElements(analyzer)
