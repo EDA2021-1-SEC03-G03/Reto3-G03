@@ -65,7 +65,7 @@ def newAnalyzer():
 # Funciones para agregar informacion al catalogo
 
 
-def addCrime(analyzer, track):
+def addTrack(analyzer, track):
     """
     """
     lt.addLast(analyzer['tracks'], track)

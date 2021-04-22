@@ -56,7 +56,7 @@ def loadData(analyzer, crimesfile):
     input_file = csv.DictReader(open(crimesfile, encoding="utf-8"),
                                 delimiter=",")
     for crime in input_file:
-        model.addCrime(analyzer, crime)
+        model.addTrack(analyzer, crime)
     return analyzer
 
 # ___________________________________________________
