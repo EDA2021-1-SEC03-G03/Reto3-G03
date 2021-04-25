@@ -208,18 +208,44 @@ def caracterizeReproductions(maps, characteristic, keylo, keyhi):
     return eventsq, artistsq
 
 
+def studyMap(maps, keylo1, keyhi1, keylo2, keyhi2, caract1, caract2):
+    '''
+    Busca dentro del mapa de deseado, en un rango
+    especificado por el usuario, los eventos con una pista
+    unica que cumplen el rango de tempo para estudiar.
+    '''
+    # Aca se organizaran los eventos por segunda vez
+    eventsmap = om.newMap(omaptype='RBT')
+    # Es la lista con todos los eventos de instrumentalness
+    eventslist = om.values(maps[caract1], keylo1, keyhi1)
+    iterator = ite.newIterator(eventslist)
+    while ite.hasNext(iterator):
+        events = ite.next(iterator)
+        newiterator = ite.newIterator(events['lstevent'])
+        while ite.hasNext(newiterator):
+            event = ite.next(newiterator)
+            om.put(eventsmap, event[caract2], event)
+    return om.values(eventsmap, keylo2, keyhi2)
+
+
+# La funcion de arriba te ahorra mucho trabajo, preguntame primero J.M
 def req2():
     return None
 
 
-def studyMusic(maps, ikeylo, ikeyhi, tkelo, tkeyhi):
-    '''
-    Busca dentro del mapa de instrumentalness, en un rango
-    especificado por el usuario, los eventos con una pista
-    unica que cumplen el rango de tempo para estudiar.
-    '''
-    eventslist = om.values(maps['instrumentalness'], ikeylo, ikeyhi)
-    return eventslist
+def studyMusic(maps, keylo1, keyhi1, keylo2, keyhi2):
+    caract1 = 'instrumentalness'
+    caract2 = 'tempo'
+    easylist = studyMap(maps, keylo1, keyhi1, keylo2, keyhi2, caract1, caract2)
+    tracksMap = mp.newMap(34500,
+                          maptype='PROBING',
+                          loadfactor=0.5)
+    iterator = ite.newIterator(easylist)
+    while ite.hasNext(iterator):
+        events = ite.next(iterator)
+        mp.put(tracksMap, events['track_id'], events)
+    return lt.size(tracksMap)
+
 
 # ==============================
 # Funciones de consulta

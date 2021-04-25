@@ -108,3 +108,11 @@ def leastMaxElements(analyzer):
 
 def caracterizeReproductions(maps, characteristic, keylo, keyhi):
     return model.caracterizeReproductions(maps, characteristic, keylo, keyhi)
+
+
+def req2():
+    return None
+
+
+def studyMusic(maps, keylo1, keyhi1, keylo2, keyhi2):
+    return model.studyMusic(maps, keylo1, keyhi1, keylo2, keyhi2)

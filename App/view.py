@@ -102,6 +102,17 @@ while True:
         tot = controller.caracterizeReproductions(cont, charact, keylo, keyhi)
         print(tot)
 
+    elif int(inputs[0]) == 4:
+        print('aca va lo tuyo Daniel')
+
+    elif int(inputs[0]) == 5:
+        keylo1 = input("Inserte los valores minimos de Instrumentalness: ")
+        keyhi1 = input("Inserte los valores maximos de Instrumentalness: ")
+        keylo2 = input("Inserte los valores minimos de Tempo: ")
+        keyhi2 = input("Inserte los valores maximos de Tempo: ")
+        tot = controller.studyMusic(cont, keylo1, keyhi1, keylo2, keyhi2)
+        print(tot)
+
     else:
         sys.exit(0)
 sys.exit(0)
