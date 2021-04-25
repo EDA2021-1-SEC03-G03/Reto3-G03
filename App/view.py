@@ -50,10 +50,12 @@ def printMenu():
     print("*******************************************")
     print("Bienvenido")
     print("1- Inicializar Analizador")
-    print("2- Proximamente en cinees")
-    print("3- Despues de la anterior viene esta")
-    print("4- Esta es una secuela de la anterior")
-    print("4- Episodio Final")
+    print("2- Cargar la información al Analizador")
+    print("3- Consultar los eventos y artistas por una categoria")
+    print("4- Req Daniel")
+    print("5- Consultar Música para estudiar ")
+    print("6- Aun no ")
+    print("7- Esperate we ")
     print("0- Salir")
     print("*******************************************")
 
@@ -84,7 +86,7 @@ while True:
     elif int(inputs[0]) == 2:
         print("\nCargando información de las pistas ....")
         controller.loadData(cont, file)
-        print('pistas cargadas: ' + str(controller.sizeTracks(cont)))
+        print('pistas cargadas: ' + str(controller.sizeEvents(cont)))
         print('Altura del arbol: ' + str(controller.indexHeight(cont)))
         print('Elementos en el arbol: ' + str(controller.indexSize(cont)))
         print('Menor Llave: ' + str(controller.minKey(cont)))
@@ -94,11 +96,11 @@ while True:
                                  elements[1])
 
     elif int(inputs[0]) == 3:
-        print("\nBuscando crimenes en un rango de fechas: ")
-        initialDate = input("Fecha Inicial (YYYY-MM-DD): ")
-        finalDate = input("Fecha Final (YYYY-MM-DD): ")
-        total = controller.getCrimesByRange(cont, initialDate, finalDate)
-        print("\nTotal de crimenes en el rango de fechas: " + str(total))
+        charact = input("Escriba la categoria que desea consultar: ").lower()
+        keylo = input("Inserte los valores minimos: ")
+        keyhi = input("Inserte los valores maximos: ")
+        tot = controller.caracterizeReproductions(cont, charact, keylo, keyhi)
+        print(tot)
 
     else:
         sys.exit(0)

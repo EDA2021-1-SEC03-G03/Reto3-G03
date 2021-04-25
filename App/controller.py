@@ -55,8 +55,8 @@ def loadData(analyzer, crimesfile):
     crimesfile = cf.data_dir + crimesfile
     input_file = csv.DictReader(open(crimesfile, encoding="utf-8"),
                                 delimiter=",")
-    for crime in input_file:
-        model.addTrack(analyzer, crime)
+    for event in input_file:
+        model.addEvent(analyzer, event)
     return analyzer
 
 # ___________________________________________________
@@ -64,11 +64,11 @@ def loadData(analyzer, crimesfile):
 # ___________________________________________________
 
 
-def sizeTracks(analyzer):
+def sizeEvents(analyzer):
     """
     Numero de crimenes leidos
     """
-    return model.sizeTracks(analyzer)
+    return model.sizeEvents(analyzer)
 
 
 def indexHeight(analyzer):
@@ -104,3 +104,7 @@ def leastMaxElements(analyzer):
     La mayor llave del arbol
     """
     return model.leastMaxElements(analyzer)
+
+
+def caracterizeReproductions(maps, characteristic, keylo, keyhi):
+    return model.caracterizeReproductions(maps, characteristic, keylo, keyhi)
