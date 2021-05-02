@@ -20,7 +20,6 @@
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
 import os
-# import random
 import config as cf
 import sys
 import controller
@@ -79,22 +78,33 @@ def printFirstsLastsElements(least5, greater5):
 
 
 def printReq1(charact, keylo, keyhi, numbers):
-    print("\n\t++++++++++++ Resultados... ++++++++++++\n\t",
-          charact, " is between ", str(keylo), " and", str(keyhi),
+    print("=" * columns)
+    print("\nRsultados: \n\t",
+          charact.capitalize(), " is between ", str(keylo), " and", str(keyhi),
           "\n\tTotal of reproductions: ", str(numbers[0]),
-          "\n\tTotal of unique artists: ", str(numbers[1]),
-          "\n\t++++++++++++ Resultados... ++++++++++++")
+          "\n\tTotal of unique artists: ", str(numbers[1]))
+    print("=" * columns)
 
 
 def printreq3(keylo1, keyhi1, keylo2, keyhi2, unique):
     print("=" * columns)
-    print(
-          "\nRsultados: "
+    print("\nRsultados: "
           "\n\tInstrumentalness is between ", str(keylo1), " and", str(keyhi1),
           "\n\tTempo is between ", str(keylo2), " and", str(keyhi2),
-          "\n\tTotal of unique tracks in events: ", str(unique)
-          )
+          "\n\tTotal of unique tracks in events: ", str(unique))
     print("=" * columns)
+
+
+def printreq4(gender, keylo, keyhi, rep, artists, artlist):
+    print("================ ", gender.upper(), " ================")
+    print("For ", gender, " the tempo is between ", keylo, " and ", keyhi,
+          " BPM")
+    print(gender, " reproductions: ", rep, " with ", artists,
+          " different artists")
+    print("------ Some artists for ", gender, " ------")
+    pos = 1
+    for i in artlist['elements']:
+        print("Artist ", str(pos), ": ", i)
 
 
 """
@@ -162,6 +172,33 @@ while True:
         else:
             tot = controller.studyMusic(cont, keylo1, keyhi1, keylo2, keyhi2)
             printreq3(keylo1, keyhi1, keylo2, keyhi2, tot)
+
+    elif int(inputs[0]) == 6:
+        reggae = controller.reggae(cont)
+        '''
+        down = controller.down(cont)
+        chill = controller.chill(cont)
+        hiphop = controller.hiphop(cont)
+        jazzfunk = controller.jazzfunk(cont)
+        pop = controller.pop(cont)
+        ryb = controller.ryb(cont)
+        rock = controller.rock(cont)
+        metal = controller.metal(cont)'''
+        print("=" * columns)
+        print("\n")
+        printreq4("Reggae", 60, 90, reggae[0], reggae[2], reggae[1])
+        '''
+        printreq4("Down-tempo", 70, 100, down[0], down[2], down[1])
+        printreq4("Chill-out", 90, 120, chill[0], chill[2], chill[1])
+        printreq4("Hip-hop", 85, 115, hiphop[0], hiphop[2], hiphop[1])
+        printreq4("Jazz and Funk", 120, 125, jazzfunk[0], jazzfunk[2],
+                  jazzfunk[1])
+        printreq4("Pop", 100, 130, pop[0], pop[2], pop[1])
+        printreq4("R&B", 60, 80, ryb[0], ryb[2], ryb[1])
+        printreq4("Rock", 110, 140, rock[0], rock[2], rock[1])
+        printreq4("Metal", 100, 160, metal[0], metal[2], metal[1])'''
+        print("\n")
+        print("=" * columns)
 
     else:
         sys.exit(0)

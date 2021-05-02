@@ -116,3 +116,39 @@ def req2():
 
 def studyMusic(maps, keylo1, keyhi1, keylo2, keyhi2):
     return model.studyMusic(maps, keylo1, keyhi1, keylo2, keyhi2)
+
+
+def reggae(maps):
+    return model.reggae(maps)
+
+
+def down(maps):
+    return model.down(maps)
+
+
+def chill(maps):
+    return model.chill(maps)
+
+
+def hiphop(maps):
+    return model.hiphop(maps)
+
+
+def jazzfunk(maps):
+    return model.jazzfunk(maps)
+
+
+def pop(maps):
+    return model.pop(maps)
+
+
+def ryb(maps):
+    return model.ryb(maps)
+
+
+def rock(maps):
+    return model.rock(maps)
+
+
+def metal(maps):
+    return model.metal(maps)

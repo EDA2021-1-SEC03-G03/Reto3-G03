@@ -26,6 +26,7 @@
 
 
 import config as cf
+import random
 from DISClib.ADT import list as lt
 from DISClib.ADT import orderedmap as om
 from DISClib.ADT import map as mp
@@ -40,9 +41,9 @@ una para los videos, otra para las categorias de
 los mismos.
 """
 
-# -----------------------------------------------------
+# ==============================
 # API del TAD Catalogo de Libros
-# -----------------------------------------------------
+# ==============================
 
 
 def newAnalyzer():
@@ -62,7 +63,8 @@ def newAnalyzer():
                 'speechiness': None,
                 'energy': None,
                 'danceability': None,
-                'valence': None
+                'valence': None,
+                'tempo': None
                 }
     # Cambiar el nombre porque son eventos de escucha
 
@@ -92,10 +94,14 @@ def newAnalyzer():
     analyzer['valence'] = om.newMap(omaptype='RBT',
                                     comparefunction=compareValue)
 
+    analyzer['tempo'] = om.newMap(omaptype='RBT')
+
     return analyzer
 
 
+# ==============================
 # Funciones para agregar informacion al catalogo
+# ==============================
 
 
 def addEvent(analyzer, event):
@@ -137,7 +143,7 @@ def updateContCara(maps, event):
 
     caracteristics = ['instrumentalness', 'acousticness',
                       'liveness', 'speechiness', 'energy',
-                      'danceability', 'valence']
+                      'danceability', 'valence', 'tempo']
     for i in caracteristics:
         entry = om.get(maps[i], event[i])
 
@@ -170,6 +176,11 @@ def newDataEntry(event):
 
     entry['lstevent'] = lt.newList('ARRAY_LIST')
     return entry
+
+
+# ==============================
+# Funciones de consulta
+# ==============================
 
 
 def caracterizeReproductions(maps, characteristic, keylo, keyhi):
@@ -212,6 +223,19 @@ def caracterizeReproductions(maps, characteristic, keylo, keyhi):
         return 0
 
 
+def get5artists(artistmap, lista, size):
+    '''
+    Funcion que me retorna 5 valores al azar de una lista de
+    listas pasada por parametro
+    '''
+    finallist = lt.newList("ARRAY_LIST")
+    eventlist = random.sample(range(size), 10)
+    for i in eventlist:
+        keya = lt.getElement(lista, i)
+        lt.addLast(finallist, keya)
+    return finallist
+
+
 def studyMap(maps, keylo1, keyhi1, keylo2, keyhi2, caract1, caract2):
     '''
     Busca dentro del mapa de deseado, en un rango
@@ -232,7 +256,7 @@ def studyMap(maps, keylo1, keyhi1, keylo2, keyhi2, caract1, caract2):
     return om.values(eventsmap, keylo2, keyhi2)
 
 
-# La funcion de arriba te ahorra mucho trabajo, preguntame primero J.M
+# La funcion studyMap() te ahorra mucho trabajo, preguntame primero J.M
 def req2():
     return None
 
@@ -255,9 +279,265 @@ def studyMusic(maps, keylo1, keyhi1, keylo2, keyhi2):
     return lt.size(tracksMap)
 
 
-# ==============================
-# Funciones de consulta
-# ==============================
+def reggae(maps):
+    '''
+    Funcion que retorna la cantidad de de reproducciones de
+    canciones de genero reggae, la cantidad de artistas unicos
+    y 10 id's de artistas al azar
+    '''
+    # Aca se agregaran los artistas unicos
+    reggaemap = om.newMap(omaptype='RBT')
+    reproductions = 0
+    # Se obtienen los eventos en el rango del genero
+    reggae = om.values(maps['tempo'], str(60), str(90))
+    # Recorre el arbol y busca los valores del genero
+    iterator = ite.newIterator(reggae)
+    while ite.hasNext(iterator):
+        eventlist = ite.next(iterator)
+        # agrega la cantidad de videos que hay dentro de cada valor
+        reproductions += lt.size(eventlist['lstevent'])
+        newiterator = ite.newIterator(eventlist['lstevent'])
+        while ite.hasNext(newiterator):
+            event = ite.next(newiterator)
+            # Agrega a los artistas a un mapa para saber los unicos
+            om.put(reggaemap, event['artist_id'], event)
+    # Es una lista con 5 artists_id al azar
+    lista = om.keySet(reggaemap)
+    size = lt.size(lista)
+    artistslist = get5artists(reggaemap, lista, size)
+    return reproductions, artistslist, size
+
+
+def down(maps):
+    '''
+    Funcion que retorna la cantidad de de reproducciones de
+    canciones de genero Down-tempo, la cantidad de artistas unicos
+    y 10 id's de artistas al azar
+    '''
+    # Aca se agregaran los artistas unicos
+    downmap = om.newMap(omaptype='RBT')
+    reproductions = 0
+    # Se obtienen los eventos en el rango del genero
+    down = om.values(maps["tempo"], str(70), str(100))
+    # Recorre el arbol y busca los valores del genero
+    iterator = ite.newIterator(down)
+    while ite.hasNext(iterator):
+        eventlist = ite.next(iterator)
+        # agrega la cantidad de videos que hay dentro de cada valor
+        reproductions += lt.size(eventlist['lstevent'])
+        newiterator = ite.newIterator(eventlist['lstevent'])
+        while ite.hasNext(newiterator):
+            event = ite.next(newiterator)
+            # Agrega a los artistas a un mapa para saber los unicos
+            om.put(downmap, event['artist_id'], event)
+    # Es una lista con 5 artists_id al azar
+    lista = om.keySet(downmap)
+    size = lt.size(lista)
+    artistslist = get5artists(downmap, lista, size)
+    return reproductions, artistslist, size
+
+
+def chill(maps):
+    '''
+    Funcion que retorna la cantidad de de reproducciones de
+    canciones de genero Chill-out, la cantidad de artistas unicos
+    y 10 id's de artistas al azar
+    '''
+    # Aca se agregaran los artistas unicos
+    chillmap = om.newMap(omaptype='RBT')
+    reproductions = 0
+    # Se obtienen los eventos en el rango del genero
+    chill = om.values(maps["tempo"], str(90), str(120))
+    # Recorre el arbol y busca los valores del genero
+    iterator = ite.newIterator(chill)
+    while ite.hasNext(iterator):
+        eventlist = ite.next(iterator)
+        # agrega la cantidad de videos que hay dentro de cada valor
+        reproductions += lt.size(eventlist['lstevent'])
+        newiterator = ite.newIterator(eventlist['lstevent'])
+        while ite.hasNext(newiterator):
+            event = ite.next(newiterator)
+            # Agrega a los artistas a un mapa para saber los unicos
+            om.put(chillmap, event['artist_id'], event)
+    # Es una lista con 5 artists_id al azar
+    lista = om.keySet(chillmap)
+    size = lt.size(lista)
+    artistslist = get5artists(chillmap, lista, size)
+    return reproductions, artistslist, size
+
+
+def hiphop(maps):
+    '''
+    Funcion que retorna la cantidad de de reproducciones de
+    canciones de genero Hip-hop, la cantidad de artistas unicos
+    y 10 id's de artistas al azar
+    '''
+    # Aca se agregaran los artistas unicos
+    hiphopmap = om.newMap(omaptype='RBT')
+    reproductions = 0
+    # Se obtienen los eventos en el rango del genero
+    hiphop = om.values(maps["tempo"], str(85), str(115))
+    # Recorre el arbol y busca los valores del genero
+    iterator = ite.newIterator(hiphop)
+    while ite.hasNext(iterator):
+        eventlist = ite.next(iterator)
+        # agrega la cantidad de videos que hay dentro de cada valor
+        reproductions += lt.size(eventlist['lstevent'])
+        newiterator = ite.newIterator(eventlist['lstevent'])
+        while ite.hasNext(newiterator):
+            event = ite.next(newiterator)
+            # Agrega a los artistas a un mapa para saber los unicos
+            om.put(hiphopmap, event['artist_id'], event)
+    # Es una lista con 5 artists_id al azar
+    lista = om.keySet(hiphopmap)
+    size = lt.size(lista)
+    artistslist = get5artists(hiphopmap, lista, size)
+    return reproductions, artistslist, size
+
+
+def jazzfunk(maps):
+    '''
+    Funcion que retorna la cantidad de de reproducciones de
+    canciones de genero Jazz and funk, la cantidad de artistas unicos
+    y 10 id's de artistas al azar
+    '''
+    # Aca se agregaran los artistas unicos
+    jazzfunkmap = om.newMap(omaptype='RBT')
+    reproductions = 0
+    # Se obtienen los eventos en el rango del genero
+    jazzfunk = om.values(maps["tempo"], str(120), str(125))
+    # Recorre el arbol y busca los valores del genero
+    iterator = ite.newIterator(jazzfunk)
+    while ite.hasNext(iterator):
+        eventlist = ite.next(iterator)
+        # agrega la cantidad de videos que hay dentro de cada valor
+        reproductions += lt.size(eventlist['lstevent'])
+        newiterator = ite.newIterator(eventlist['lstevent'])
+        while ite.hasNext(newiterator):
+            event = ite.next(newiterator)
+            # Agrega a los artistas a un mapa para saber los unicos
+            om.put(jazzfunkmap, event['artist_id'], event)
+    # Es una lista con 5 artists_id al azar
+    lista = om.keySet(jazzfunkmap)
+    size = lt.size(lista)
+    artistslist = get5artists(jazzfunkmap, lista, size)
+    return reproductions, artistslist, size
+
+
+def pop(maps):
+    '''
+    Funcion que retorna la cantidad de de reproducciones de
+    canciones de genero Pop, la cantidad de artistas unicos
+    y 10 id's de artistas al azar
+    '''
+    # Aca se agregaran los artistas unicos
+    popmap = om.newMap(omaptype='RBT')
+    reproductions = 0
+    # Se obtienen los eventos en el rango del genero
+    pop = om.values(maps["tempo"], str(100), str(130))
+    # Recorre el arbol y busca los valores del genero
+    iterator = ite.newIterator(pop)
+    while ite.hasNext(iterator):
+        eventlist = ite.next(iterator)
+        # agrega la cantidad de videos que hay dentro de cada valor
+        reproductions += lt.size(eventlist['lstevent'])
+        newiterator = ite.newIterator(eventlist['lstevent'])
+        while ite.hasNext(newiterator):
+            event = ite.next(newiterator)
+            # Agrega a los artistas a un mapa para saber los unicos
+            om.put(popmap, event['artist_id'], event)
+    # Es una lista con 5 artists_id al azar
+    lista = om.keySet(popmap)
+    size = lt.size(lista)
+    artistslist = get5artists(popmap, lista, size)
+    return reproductions, artistslist, size
+
+
+def ryb(maps):
+    '''
+    Funcion que retorna la cantidad de de reproducciones de
+    canciones de genero ryb, la cantidad de artistas unicos
+    y 10 id's de artistas al azar
+    '''
+    # Aca se agregaran los artistas unicos
+    rybmap = om.newMap(omaptype='RBT')
+    reproductions = 0
+    # Se obtienen los eventos en el rango del genero
+    ryb = om.values(maps["tempo"], str(60), str(80))
+    # Recorre el arbol y busca los valores del genero
+    iterator = ite.newIterator(ryb)
+    while ite.hasNext(iterator):
+        eventlist = ite.next(iterator)
+        # agrega la cantidad de videos que hay dentro de cada valor
+        reproductions += lt.size(eventlist['lstevent'])
+        newiterator = ite.newIterator(eventlist['lstevent'])
+        while ite.hasNext(newiterator):
+            event = ite.next(newiterator)
+            # Agrega a los artistas a un mapa para saber los unicos
+            om.put(rybmap, event['artist_id'], event)
+    # Es una lista con 5 artists_id al azar
+    lista = om.keySet(rybmap)
+    size = lt.size(lista)
+    artistslist = get5artists(rybmap, lista, size)
+    return reproductions, artistslist, size
+
+
+def rock(maps):
+    '''
+    Funcion que retorna la cantidad de de reproducciones de
+    canciones de genero rock, la cantidad de artistas unicos
+    y 10 id's de artistas al azar
+    '''
+    # Aca se agregaran los artistas unicos
+    rockmap = om.newMap(omaptype='RBT')
+    reproductions = 0
+    # Se obtienen los eventos en el rango del genero
+    rock = om.values(maps["tempo"], str(110), str(140))
+    # Recorre el arbol y busca los valores del genero
+    iterator = ite.newIterator(rock)
+    while ite.hasNext(iterator):
+        eventlist = ite.next(iterator)
+        # agrega la cantidad de videos que hay dentro de cada valor
+        reproductions += lt.size(eventlist['lstevent'])
+        newiterator = ite.newIterator(eventlist['lstevent'])
+        while ite.hasNext(newiterator):
+            event = ite.next(newiterator)
+            # Agrega a los artistas a un mapa para saber los unicos
+            om.put(rockmap, event['artist_id'], event)
+    # Es una lista con 5 artists_id al azar
+    lista = om.keySet(rockmap)
+    size = lt.size(lista)
+    artistslist = get5artists(rockmap, lista, size)
+    return reproductions, artistslist, size
+
+
+def metal(maps):
+    '''
+    Funcion que retorna la cantidad de de reproducciones de
+    canciones de genero metal, la cantidad de artistas unicos
+    y 10 id's de artistas al azar
+    '''
+    # Aca se agregaran los artistas unicos
+    metalmap = om.newMap(omaptype='RBT')
+    reproductions = 0
+    # Se obtienen los eventos en el rango del genero
+    metal = om.values(maps["tempo"], str(100), str(160))
+    # Recorre el arbol y busca los valores del genero
+    iterator = ite.newIterator(metal)
+    while ite.hasNext(iterator):
+        eventlist = ite.next(iterator)
+        # agrega la cantidad de videos que hay dentro de cada valor
+        reproductions += lt.size(eventlist['lstevent'])
+        newiterator = ite.newIterator(eventlist['lstevent'])
+        while ite.hasNext(newiterator):
+            event = ite.next(newiterator)
+            # Agrega a los artistas a un mapa para saber los unicos
+            om.put(metalmap, event['artist_id'], event)
+    # Es una lista con 5 artists_id al azar
+    lista = om.keySet(metalmap)
+    size = lt.size(lista)
+    artistslist = get5artists(metalmap, lista, size)
+    return reproductions, artistslist, size
 
 
 def sizeEvents(analyzer):
