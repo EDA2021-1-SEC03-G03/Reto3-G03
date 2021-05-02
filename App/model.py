@@ -179,33 +179,37 @@ def caracterizeReproductions(maps, characteristic, keylo, keyhi):
     y la cantida de artistas unicos que cumplen las caracteristicas
     pasadas por el usuario.
     '''
-    events = om.values(maps[characteristic], keylo, keyhi)
-    # creamos una tabla de has para guardar a los artistas unicos
-    artistsMap = mp.newMap(34500,
-                           maptype='PROBING',
-                           loadfactor=0.5)
-    eventsq = 0
-    '''
-    Debemos recorrer dos veces porque en cada posicion de los elementos
-    retornados en events hay una lista con cada uno de los eventos que
-    tienen los mismos valores pero que fueron publicados por una persona
-    diferente en twitter.
-    '''
-    iterator = ite.newIterator(events)
-    while ite.hasNext(iterator):
-        # este elemento tiene la lista con los eventos
-        eventlist = ite.next(iterator)
-        # Se suman la cantidad de eventos para darle la informacion al usuario
-        eventsq += lt.size(eventlist['lstevent'])
-        newiterator = ite.newIterator(eventlist['lstevent'])
-        while ite.hasNext(newiterator):
-            # Este ya es el evento con sus caracteristicas
-            event = ite.next(newiterator)
-            # Se agrega a una tabla de hash los id's de los artistas
-            mp.put(artistsMap, event['artist_id'], 0)
-    # Es la cantidad de artistas unicos del requerimiento
-    artistsq = mp.size(artistsMap)
-    return eventsq, artistsq
+    exists = characteristic in maps
+    if exists is True:
+        events = om.values(maps[characteristic], keylo, keyhi)
+        # creamos una tabla de has para guardar a los artistas unicos
+        artistsMap = mp.newMap(34500,
+                               maptype='PROBING',
+                               loadfactor=0.5)
+        eventsq = 0
+        '''
+        Debemos recorrer dos veces porque en cada posicion de los elementos
+        retornados en events hay una lista con cada uno de los eventos que
+        tienen los mismos valores pero que fueron publicados por una persona
+        diferente en twitter.
+        '''
+        iterator = ite.newIterator(events)
+        while ite.hasNext(iterator):
+            # este elemento tiene la lista con los eventos
+            eventlist = ite.next(iterator)
+            # Se suman la cantidad de eventos
+            eventsq += lt.size(eventlist['lstevent'])
+            newiterator = ite.newIterator(eventlist['lstevent'])
+            while ite.hasNext(newiterator):
+                # Este ya es el evento con sus caracteristicas
+                event = ite.next(newiterator)
+                # Se agrega a una tabla de hash los id's de los artistas
+                mp.put(artistsMap, event['artist_id'], 0)
+        # Es la cantidad de artistas unicos del requerimiento
+        artistsq = mp.size(artistsMap)
+        return eventsq, artistsq
+    else:
+        return 0
 
 
 def studyMap(maps, keylo1, keyhi1, keylo2, keyhi2, caract1, caract2):
@@ -234,6 +238,10 @@ def req2():
 
 
 def studyMusic(maps, keylo1, keyhi1, keylo2, keyhi2):
+    '''
+    Recorre en los index de instrumentalness y tempo buscando las
+    opciones dentro del rango que busca el usuario
+    '''
     caract1 = 'instrumentalness'
     caract2 = 'tempo'
     easylist = studyMap(maps, keylo1, keyhi1, keylo2, keyhi2, caract1, caract2)

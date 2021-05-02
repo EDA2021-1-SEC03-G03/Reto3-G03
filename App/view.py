@@ -19,7 +19,8 @@
  * You should have received a copy of the GNU General Public License
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
-
+import os
+# import random
 import config as cf
 import sys
 import controller
@@ -34,9 +35,10 @@ operación solicitada
 """
 
 # ___________________________________________________
-#  Ruta a los archivos
+#  Ruta a los archivos y tamaño consola
 # ___________________________________________________
 
+columns = os.get_terminal_size().columns
 
 file = 'context_content_features-small.csv'
 cont = None
@@ -47,8 +49,9 @@ cont = None
 
 def printMenu():
     print("\n")
-    print("*******************************************")
+    print("*" * columns)
     print("Bienvenido")
+    print("Recuerde que las opciones 1 y 2 son las principales")
     print("1- Inicializar Analizador")
     print("2- Cargar la información al Analizador")
     print("3- Consultar los eventos y artistas por una categoria")
@@ -57,18 +60,41 @@ def printMenu():
     print("6- Aun no ")
     print("7- Esperate we ")
     print("0- Salir")
-    print("*******************************************")
+    print("*" * columns)
 
 
 def printFirstsLastsElements(least5, greater5):
 
-    print('\nThe last 5 elements are:')
+    print('\nThe last 5 elements are:\n')
+    counter1 = 1
     for i in least5:
-        print(i['track_id'])
+        print("\t", counter1, ").", i['track_id'])
+        counter1 += 1
 
-    print('\nThe first 5 elements are:')
+    print('\nThe first 5 elements are:\n')
+    counter2 = 1
     for j in greater5:
-        print(j['track_id'])
+        print("\t", counter2, ").", j['track_id'])
+        counter2 += 1
+
+
+def printReq1(charact, keylo, keyhi, numbers):
+    print("\n\t++++++++++++ Resultados... ++++++++++++\n\t",
+          charact, " is between ", str(keylo), " and", str(keyhi),
+          "\n\tTotal of reproductions: ", str(numbers[0]),
+          "\n\tTotal of unique artists: ", str(numbers[1]),
+          "\n\t++++++++++++ Resultados... ++++++++++++")
+
+
+def printreq3(keylo1, keyhi1, keylo2, keyhi2, unique):
+    print("=" * columns)
+    print(
+          "\nRsultados: "
+          "\n\tInstrumentalness is between ", str(keylo1), " and", str(keyhi1),
+          "\n\tTempo is between ", str(keylo2), " and", str(keyhi2),
+          "\n\tTotal of unique tracks in events: ", str(unique)
+          )
+    print("=" * columns)
 
 
 """
@@ -77,7 +103,6 @@ Menu principal
 while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n>')
-
     if int(inputs[0]) == 1:
         print("\nInicializando....")
         # cont es el controlador que se usará de acá en adelante
@@ -99,8 +124,23 @@ while True:
         charact = input("Escriba la categoria que desea consultar: ").lower()
         keylo = input("Inserte los valores minimos: ")
         keyhi = input("Inserte los valores maximos: ")
-        tot = controller.caracterizeReproductions(cont, charact, keylo, keyhi)
-        print(tot)
+        if float(keylo) < 0 or float(keyhi) < 0:
+            print("\n")
+            print("=" * columns)
+            print("\n\tLos valores maximos o minimos son menores que 0...")
+            print("\tIntente nuevamente con valores positivos")
+            print("=" * columns)
+            print("\n")
+        else:
+            tot = controller.caracterizeRep(cont, charact, keylo, keyhi)
+            if tot == 0:
+                print("\n")
+                print("=" * columns)
+                print("\n\t¡¡La categoria buscada no existe!!\n")
+                print("=" * columns)
+                print("\n")
+            else:
+                printReq1(charact, keylo, keyhi, tot)
 
     elif int(inputs[0]) == 4:
         print('aca va lo tuyo Daniel')
@@ -110,8 +150,18 @@ while True:
         keyhi1 = input("Inserte los valores maximos de Instrumentalness: ")
         keylo2 = input("Inserte los valores minimos de Tempo: ")
         keyhi2 = input("Inserte los valores maximos de Tempo: ")
-        tot = controller.studyMusic(cont, keylo1, keyhi1, keylo2, keyhi2)
-        print(tot)
+        new1 = float(keylo1) < 0 or float(keyhi1) < 0
+        new2 = float(keylo2) < 0 or float(keyhi2) < 0
+        if new1 or new2:
+            print("\n")
+            print("=" * columns)
+            print("\n\tLos valores maximos o minimos son menores que 0...")
+            print("\tIntente nuevamente con valores positivos")
+            print("=" * columns)
+            print("\n")
+        else:
+            tot = controller.studyMusic(cont, keylo1, keyhi1, keylo2, keyhi2)
+            printreq3(keylo1, keyhi1, keylo2, keyhi2, tot)
 
     else:
         sys.exit(0)

@@ -106,7 +106,7 @@ def leastMaxElements(analyzer):
     return model.leastMaxElements(analyzer)
 
 
-def caracterizeReproductions(maps, characteristic, keylo, keyhi):
+def caracterizeRep(maps, characteristic, keylo, keyhi):
     return model.caracterizeReproductions(maps, characteristic, keylo, keyhi)
 
 
