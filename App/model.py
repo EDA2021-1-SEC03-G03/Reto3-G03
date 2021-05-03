@@ -73,26 +73,19 @@ def newAnalyzer():
     analyzer['idIndex'] = om.newMap(omaptype='RBT',
                                     comparefunction=compareIds)
 
-    analyzer['instrumentalness'] = om.newMap(omaptype='RBT',
-                                             comparefunction=compareValue)
+    analyzer['instrumentalness'] = om.newMap(omaptype='RBT')
 
-    analyzer['acousticness'] = om.newMap(omaptype='RBT',
-                                         comparefunction=compareValue)
+    analyzer['acousticness'] = om.newMap(omaptype='RBT')
 
-    analyzer['liveness'] = om.newMap(omaptype='RBT',
-                                     comparefunction=compareValue)
+    analyzer['liveness'] = om.newMap(omaptype='RBT')
 
-    analyzer['speechiness'] = om.newMap(omaptype='RBT',
-                                        comparefunction=compareValue)
+    analyzer['speechiness'] = om.newMap(omaptype='RBT')
 
-    analyzer['energy'] = om.newMap(omaptype='RBT',
-                                   comparefunction=compareValue)
+    analyzer['energy'] = om.newMap(omaptype='RBT')
 
-    analyzer['danceability'] = om.newMap(omaptype='RBT',
-                                         comparefunction=compareValue)
+    analyzer['danceability'] = om.newMap(omaptype='RBT')
 
-    analyzer['valence'] = om.newMap(omaptype='RBT',
-                                    comparefunction=compareValue)
+    analyzer['valence'] = om.newMap(omaptype='RBT')
 
     analyzer['tempo'] = om.newMap(omaptype='RBT')
 
@@ -145,11 +138,11 @@ def updateContCara(maps, event):
                       'liveness', 'speechiness', 'energy',
                       'danceability', 'valence', 'tempo']
     for i in caracteristics:
-        entry = om.get(maps[i], event[i])
+        entry = om.get(maps[i], float(event[i]))
 
         if entry is None:
             datantry = newDataEntry(event)
-            om.put(maps[i], event[i], datantry)
+            om.put(maps[i], float(event[i]), datantry)
         else:
             datantry = me.getValue(entry)
         addEntry(datantry, event)
@@ -289,7 +282,7 @@ def reggae(maps):
     reggaemap = om.newMap(omaptype='RBT')
     reproductions = 0
     # Se obtienen los eventos en el rango del genero
-    reggae = om.values(maps['tempo'], str(60), str(90))
+    reggae = om.values(maps['tempo'], 60, 90)
     # Recorre el arbol y busca los valores del genero
     iterator = ite.newIterator(reggae)
     while ite.hasNext(iterator):
@@ -318,7 +311,7 @@ def down(maps):
     downmap = om.newMap(omaptype='RBT')
     reproductions = 0
     # Se obtienen los eventos en el rango del genero
-    down = om.values(maps["tempo"], str(70), str(100))
+    down = om.values(maps["tempo"], 70, 100)
     # Recorre el arbol y busca los valores del genero
     iterator = ite.newIterator(down)
     while ite.hasNext(iterator):
@@ -347,7 +340,7 @@ def chill(maps):
     chillmap = om.newMap(omaptype='RBT')
     reproductions = 0
     # Se obtienen los eventos en el rango del genero
-    chill = om.values(maps["tempo"], str(90), str(120))
+    chill = om.values(maps["tempo"], 90, 120)
     # Recorre el arbol y busca los valores del genero
     iterator = ite.newIterator(chill)
     while ite.hasNext(iterator):
@@ -376,7 +369,7 @@ def hiphop(maps):
     hiphopmap = om.newMap(omaptype='RBT')
     reproductions = 0
     # Se obtienen los eventos en el rango del genero
-    hiphop = om.values(maps["tempo"], str(85), str(115))
+    hiphop = om.values(maps["tempo"], 85, 115)
     # Recorre el arbol y busca los valores del genero
     iterator = ite.newIterator(hiphop)
     while ite.hasNext(iterator):
@@ -405,7 +398,7 @@ def jazzfunk(maps):
     jazzfunkmap = om.newMap(omaptype='RBT')
     reproductions = 0
     # Se obtienen los eventos en el rango del genero
-    jazzfunk = om.values(maps["tempo"], str(120), str(125))
+    jazzfunk = om.values(maps["tempo"], 120, 125)
     # Recorre el arbol y busca los valores del genero
     iterator = ite.newIterator(jazzfunk)
     while ite.hasNext(iterator):
@@ -434,7 +427,7 @@ def pop(maps):
     popmap = om.newMap(omaptype='RBT')
     reproductions = 0
     # Se obtienen los eventos en el rango del genero
-    pop = om.values(maps["tempo"], str(100), str(130))
+    pop = om.values(maps["tempo"], 100, 130)
     # Recorre el arbol y busca los valores del genero
     iterator = ite.newIterator(pop)
     while ite.hasNext(iterator):
@@ -463,7 +456,7 @@ def ryb(maps):
     rybmap = om.newMap(omaptype='RBT')
     reproductions = 0
     # Se obtienen los eventos en el rango del genero
-    ryb = om.values(maps["tempo"], str(60), str(80))
+    ryb = om.values(maps["tempo"], 60, 80)
     # Recorre el arbol y busca los valores del genero
     iterator = ite.newIterator(ryb)
     while ite.hasNext(iterator):
@@ -492,7 +485,7 @@ def rock(maps):
     rockmap = om.newMap(omaptype='RBT')
     reproductions = 0
     # Se obtienen los eventos en el rango del genero
-    rock = om.values(maps["tempo"], str(110), str(140))
+    rock = om.values(maps["tempo"], 110, 140)
     # Recorre el arbol y busca los valores del genero
     iterator = ite.newIterator(rock)
     while ite.hasNext(iterator):
@@ -521,7 +514,7 @@ def metal(maps):
     metalmap = om.newMap(omaptype='RBT')
     reproductions = 0
     # Se obtienen los eventos en el rango del genero
-    metal = om.values(maps["tempo"], str(100), str(160))
+    metal = om.values(maps["tempo"], 100, 160)
     # Recorre el arbol y busca los valores del genero
     iterator = ite.newIterator(metal)
     while ite.hasNext(iterator):

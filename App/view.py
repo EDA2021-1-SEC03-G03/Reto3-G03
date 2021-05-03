@@ -97,14 +97,15 @@ def printreq3(keylo1, keyhi1, keylo2, keyhi2, unique):
 
 def printreq4(gender, keylo, keyhi, rep, artists, artlist):
     print("================ ", gender.upper(), " ================")
-    print("For ", gender, " the tempo is between ", keylo, " and ", keyhi,
+    print("For", gender, "the tempo is between", keylo, "and", keyhi,
           " BPM")
-    print(gender, " reproductions: ", rep, " with ", artists,
+    print(gender, " reproductions:", rep, "with", artists,
           " different artists")
-    print("------ Some artists for ", gender, " ------")
+    print("\n------ Some artists for", gender, " ------")
     pos = 1
     for i in artlist['elements']:
-        print("Artist ", str(pos), ": ", i)
+        print("Artist ", str(pos) + ":", i)
+        pos += 1
 
 
 """
@@ -139,8 +140,9 @@ while True:
             print("=" * columns)
             print("\n\tLos valores maximos o minimos son menores que 0...")
             print("\tIntente nuevamente con valores positivos")
-            print("=" * columns)
             print("\n")
+            print("=" * columns)
+
         else:
             tot = controller.caracterizeRep(cont, charact, keylo, keyhi)
             if tot == 0:
@@ -175,7 +177,6 @@ while True:
 
     elif int(inputs[0]) == 6:
         reggae = controller.reggae(cont)
-        '''
         down = controller.down(cont)
         chill = controller.chill(cont)
         hiphop = controller.hiphop(cont)
@@ -183,20 +184,27 @@ while True:
         pop = controller.pop(cont)
         ryb = controller.ryb(cont)
         rock = controller.rock(cont)
-        metal = controller.metal(cont)'''
+        metal = controller.metal(cont)
         print("=" * columns)
         print("\n")
         printreq4("Reggae", 60, 90, reggae[0], reggae[2], reggae[1])
-        '''
+        print("\n")
         printreq4("Down-tempo", 70, 100, down[0], down[2], down[1])
+        print("\n")
         printreq4("Chill-out", 90, 120, chill[0], chill[2], chill[1])
+        print("\n")
         printreq4("Hip-hop", 85, 115, hiphop[0], hiphop[2], hiphop[1])
+        print("\n")
         printreq4("Jazz and Funk", 120, 125, jazzfunk[0], jazzfunk[2],
                   jazzfunk[1])
+        print("\n")
         printreq4("Pop", 100, 130, pop[0], pop[2], pop[1])
+        print("\n")
         printreq4("R&B", 60, 80, ryb[0], ryb[2], ryb[1])
+        print("\n")
         printreq4("Rock", 110, 140, rock[0], rock[2], rock[1])
-        printreq4("Metal", 100, 160, metal[0], metal[2], metal[1])'''
+        print("\n")
+        printreq4("Metal", 100, 160, metal[0], metal[2], metal[1])
         print("\n")
         print("=" * columns)
 
