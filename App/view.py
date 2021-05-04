@@ -122,9 +122,10 @@ while True:
     elif int(inputs[0]) == 2:
         print("\nCargando información de las pistas ....")
         controller.loadData(cont, file)
-        print('pistas cargadas: ' + str(controller.sizeEvents(cont)))
+        print('Total de eventos cargados: ' + str(controller.sizeEvents(cont)))
         print('Altura del arbol: ' + str(controller.indexHeight(cont)))
-        print('Elementos en el arbol: ' + str(controller.indexSize(cont)))
+        print('Artistas únicos: ' + str(controller.indexSize(cont['artists'])))
+        print('Pistas únicas: ' + str(controller.indexSize(cont['tracks'])))
         print('Menor Llave: ' + str(controller.minKey(cont)))
         print('Mayor Llave: ' + str(controller.maxKey(cont)))
         elements = controller.leastMaxElements(cont)

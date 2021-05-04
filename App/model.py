@@ -56,7 +56,8 @@ def newAnalyzer():
     Retorna el analizador inicializado.
     """
     analyzer = {'event': None,
-                'idIndex': None,
+                'tracks': None,
+                'artists': None,
                 'instrumentalness': None,
                 'acousticness': None,
                 'liveness':  None,
@@ -70,8 +71,9 @@ def newAnalyzer():
 
     analyzer['event'] = lt.newList('ARRAY_LIST')
 
-    analyzer['idIndex'] = om.newMap(omaptype='RBT',
-                                    comparefunction=compareIds)
+    analyzer['tracks'] = om.newMap(omaptype='RBT')
+                             
+    analyzer['artists'] = om.newMap(omaptype='RBT')
 
     analyzer['instrumentalness'] = om.newMap(omaptype='RBT')
 
@@ -101,7 +103,8 @@ def addEvent(analyzer, event):
     """
     """
     lt.addLast(analyzer['event'], event)
-    updateIdIndex(analyzer['idIndex'], event)
+    updateIdIndex(analyzer['tracks'], event)
+    updateartistsIndex(analyzer['artists'], event)
     updateContCara(analyzer, event)
     return analyzer
 
@@ -116,6 +119,26 @@ def updateIdIndex(maps, event):
     se crea y se actualiza el indice del id de las pistas.
     """
     eventId = event['track_id']
+    entry = om.get(maps, eventId)
+    if entry is None:
+        datantry = newDataEntry(event)
+        om.put(maps, eventId, datantry)
+    else:
+        datantry = me.getValue(entry)
+    addEntry(datantry, event)
+    return maps
+
+
+def updateartistsIndex(maps, event):
+    """
+    Se toma El track_id de cada evento y se adiciona al map
+    . Si el track_id del evento ya esta en el arbol, se adiciona
+    a su lista respectiva y se actualiza el index.
+
+    Si no se encuentra creado un nodo para ese id en el arbol
+    se crea y se actualiza el indice del id de las pistas.
+    """
+    eventId = event['artist_id']
     entry = om.get(maps, eventId)
     if entry is None:
         datantry = newDataEntry(event)
@@ -544,28 +567,28 @@ def indexHeight(analyzer):
     """
     Altura del arbol
     """
-    return om.height(analyzer['idIndex'])
+    return om.height(analyzer['tracks'])
 
 
 def indexSize(analyzer):
     """
     Numero de elementos en el indice
     """
-    return om.size(analyzer['idIndex'])
+    return om.size(analyzer)
 
 
 def minKey(analyzer):
     """
     Llave mas pequena
     """
-    return om.minKey(analyzer['idIndex'])
+    return om.minKey(analyzer['tracks'])
 
 
 def maxKey(analyzer):
     """
     Llave mas grande
     """
-    return om.maxKey(analyzer['idIndex'])
+    return om.maxKey(analyzer['tracks'])
 
 
 def leastMaxElements(analyzer):
