@@ -120,17 +120,39 @@ while True:
         cont = controller.init()
 
     elif int(inputs[0]) == 2:
-        print("\nCargando información de las pistas ....")
+        print('=' * columns)
+        print("Cargando información de las pistas ....")
         controller.loadData(cont, file)
-        print('Total de eventos cargados: ' + str(controller.sizeEvents(cont)))
-        print('Altura del arbol: ' + str(controller.indexHeight(cont)))
-        print('Artistas únicos: ' + str(controller.indexSize(cont['artists'])))
-        print('Pistas únicas: ' + str(controller.indexSize(cont['tracks'])))
-        print('Menor Llave: ' + str(controller.minKey(cont)))
-        print('Mayor Llave: ' + str(controller.maxKey(cont)))
+        print('\nTotal de eventos cargados: ' +
+              str(controller.sizeEvents(cont)))
+        print('\nInstrumentalness altura: ' +
+              str(controller.indexHeight(cont['instrumentalness'])))
+        print('Acousticness altura: ' +
+              str(controller.indexHeight(cont['acousticness'])))
+        print('Liveness altura: ' +
+              str(controller.indexHeight(cont['liveness'])))
+        print('Speechiness altura: ' +
+              str(controller.indexHeight(cont['speechiness'])))
+        print('Energy altura: ' +
+              str(controller.indexHeight(cont['energy'])))
+        print('Danceability altura: ' +
+              str(controller.indexHeight(cont['danceability'])))
+        print('Valence altura: ' +
+              str(controller.indexHeight(cont['valence'])))
+        print('Tempo altura: ' +
+              str(controller.indexHeight(cont['tempo'])))
+        print('\nArtistas únicos: ' +
+              str(controller.indexSize(cont['artists'])))
+        print('Pistas únicas: ' +
+              str(controller.indexSize(cont['tracks'])))
+        print('\nMenor Llave: ' +
+              str(controller.minKey(cont)))
+        print('Mayor Llave: ' +
+              str(controller.maxKey(cont)))
         elements = controller.leastMaxElements(cont)
         printFirstsLastsElements(elements[0],
                                  elements[1])
+        print('=' * columns)
 
     elif int(inputs[0]) == 3:
         charact = input("Escriba la categoria que desea consultar: ").lower()

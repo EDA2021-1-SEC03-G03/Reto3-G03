@@ -72,7 +72,7 @@ def newAnalyzer():
     analyzer['event'] = lt.newList('ARRAY_LIST')
 
     analyzer['tracks'] = om.newMap(omaptype='RBT')
-                             
+
     analyzer['artists'] = om.newMap(omaptype='RBT')
 
     analyzer['instrumentalness'] = om.newMap(omaptype='RBT')
@@ -567,7 +567,7 @@ def indexHeight(analyzer):
     """
     Altura del arbol
     """
-    return om.height(analyzer['tracks'])
+    return om.height(analyzer)
 
 
 def indexSize(analyzer):
