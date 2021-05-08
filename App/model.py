@@ -106,6 +106,8 @@ def newAnalyzer():
 
 def addEvent(analyzer, event):
     """
+    Añade cada uno de los eventos de escucha con toda su información
+    a una estructura de tipo ARRAY_LIST
     """
     lt.addLast(analyzer['event'], event)
     updateIdIndex(analyzer['tracks'], event)
@@ -179,10 +181,8 @@ def updateContCara(maps, event):
 
 def addEntry(maps, event):
     """
-    Actualiza un indice de tipo de crimenes.  Este indice tiene una lista
-    de crimenes y una tabla de hash cuya llave es el tipo de crimen y
-    el valor es una lista con los crimenes de dicho tipo en la fecha que
-    se está consultando (dada por el nodo del arbol)
+    Añade un evento a la lista que el valor en cada uno de los
+    mapas del analyzer
     """
     lst = maps['lstevent']
     lt.addLast(lst, event)
@@ -244,9 +244,22 @@ def caracterizeReproductions(maps, characteristic, keylo, keyhi):
         return 0
 
 
-def get5artists(artistmap, lista, size):
+def get5artists(map, lista, size):
     '''
-    Funcion que me retorna 5 valores al azar de una lista de
+    Funcion que me retorna 10 valores al azar de una lista de
+    listas pasada por parametro
+    '''
+    finallist = lt.newList("ARRAY_LIST")
+    eventlist = random.sample(range(size), 5)
+    for i in eventlist:
+        keya = lt.getElement(lista, i)
+        lt.addLast(finallist, keya)
+    return finallist
+
+
+def get10artists(artistmap, lista, size):
+    '''
+    Funcion que me retorna 10 valores al azar de una lista de
     listas pasada por parametro
     '''
     finallist = lt.newList("ARRAY_LIST")
@@ -267,32 +280,44 @@ def studyMap(maps, keylo1, keyhi1, keylo2, keyhi2, caract1, caract2):
     eventsmap = om.newMap(omaptype='RBT')
     # Es la lista con todos los eventos de instrumentalness
     eventslist = om.values(maps[caract1], keylo1, keyhi1)
-    iterator = ite.newIterator(eventslist)
-    while ite.hasNext(iterator):
-        events = ite.next(iterator)
-        newiterator = ite.newIterator(events['lstevent'])
-        while ite.hasNext(newiterator):
-            event = ite.next(newiterator)
-            om.put(eventsmap, float(event[caract2]), event)
-    return om.values(eventsmap, keylo2, keyhi2)
+    if lt.isEmpty(eventslist):
+        return None
+    else:
+        iterator = ite.newIterator(eventslist)
+        while ite.hasNext(iterator):
+            events = ite.next(iterator)
+            newiterator = ite.newIterator(events['lstevent'])
+            while ite.hasNext(newiterator):
+                event = ite.next(newiterator)
+                om.put(eventsmap, float(event[caract2]), event)
+        return om.values(eventsmap, keylo2, keyhi2)
 
 
 # La funcion studyMap() te ahorra mucho trabajo, preguntame primero J.M
 def partyMusic(maps, keylo1, keyhi1, keylo2, keyhi2):
     '''
-    Recorre en los index de instrumentalness y tempo buscando las
+    Recorre en los index de Energy y da buscando las
     opciones dentro del rango que busca el usuario
     '''
     easylist = studyMap(maps, keylo1, keyhi1, keylo2, keyhi2,
                         'energy', 'danceability')
-    tracksMap = mp.newMap(34500,
-                          maptype='PROBING',
-                          loadfactor=0.5)
-    iterator = ite.newIterator(easylist)
-    while ite.hasNext(iterator):
-        events = ite.next(iterator)
-        mp.put(tracksMap, events['track_id'], events)
-    return lt.size(tracksMap)
+    if easylist is None:
+        return 0
+    else:
+        tracksMap = mp.newMap(34500,
+                              maptype='PROBING',
+                              loadfactor=0.5)
+        iterator = ite.newIterator(easylist)
+        while ite.hasNext(iterator):
+            events = ite.next(iterator)
+            mp.put(tracksMap, events['track_id'], events)
+        size = lt.size(tracksMap)
+        if size > 5:
+            tracklist = 0
+        else:
+            lista = mp.valueSet(tracksMap)
+            tracklist = get5artists(tracksMap, lista, size)
+        return size, tracklist
 
 
 def studyMusic(maps, keylo1, keyhi1, keylo2, keyhi2):
@@ -303,14 +328,23 @@ def studyMusic(maps, keylo1, keyhi1, keylo2, keyhi2):
     caract1 = 'instrumentalness'
     caract2 = 'tempo'
     easylist = studyMap(maps, keylo1, keyhi1, keylo2, keyhi2, caract1, caract2)
-    tracksMap = mp.newMap(34500,
-                          maptype='PROBING',
-                          loadfactor=0.5)
-    iterator = ite.newIterator(easylist)
-    while ite.hasNext(iterator):
-        events = ite.next(iterator)
-        mp.put(tracksMap, events['track_id'], events)
-    return lt.size(tracksMap)
+    if easylist is None:
+        return 0
+    else:
+        tracksMap = mp.newMap(34500,
+                              maptype='PROBING',
+                              loadfactor=0.5)
+        iterator = ite.newIterator(easylist)
+        while ite.hasNext(iterator):
+            events = ite.next(iterator)
+            mp.put(tracksMap, events['track_id'], events)
+        size = lt.size(tracksMap)
+        if size > 5:
+            tracklist = 0
+        else:
+            lista = mp.valueSet(tracksMap)
+            tracklist = get5artists(tracksMap, lista, size)
+        return size, tracklist
 
 
 def reggae(maps):
@@ -338,7 +372,7 @@ def reggae(maps):
     # Es una lista con 5 artists_id al azar
     lista = om.keySet(reggaemap)
     size = lt.size(lista)
-    artistslist = get5artists(reggaemap, lista, size)
+    artistslist = 10(reggaemap, lista, size)
     return reproductions, artistslist, size
 
 
@@ -367,7 +401,7 @@ def down(maps):
     # Es una lista con 5 artists_id al azar
     lista = om.keySet(downmap)
     size = lt.size(lista)
-    artistslist = get5artists(downmap, lista, size)
+    artistslist = 10(downmap, lista, size)
     return reproductions, artistslist, size
 
 
@@ -396,7 +430,7 @@ def chill(maps):
     # Es una lista con 5 artists_id al azar
     lista = om.keySet(chillmap)
     size = lt.size(lista)
-    artistslist = get5artists(chillmap, lista, size)
+    artistslist = 10(chillmap, lista, size)
     return reproductions, artistslist, size
 
 
@@ -425,7 +459,7 @@ def hiphop(maps):
     # Es una lista con 5 artists_id al azar
     lista = om.keySet(hiphopmap)
     size = lt.size(lista)
-    artistslist = get5artists(hiphopmap, lista, size)
+    artistslist = 10(hiphopmap, lista, size)
     return reproductions, artistslist, size
 
 
@@ -454,7 +488,7 @@ def jazzfunk(maps):
     # Es una lista con 5 artists_id al azar
     lista = om.keySet(jazzfunkmap)
     size = lt.size(lista)
-    artistslist = get5artists(jazzfunkmap, lista, size)
+    artistslist = 10(jazzfunkmap, lista, size)
     return reproductions, artistslist, size
 
 
@@ -483,7 +517,7 @@ def pop(maps):
     # Es una lista con 5 artists_id al azar
     lista = om.keySet(popmap)
     size = lt.size(lista)
-    artistslist = get5artists(popmap, lista, size)
+    artistslist = 10(popmap, lista, size)
     return reproductions, artistslist, size
 
 
@@ -512,7 +546,7 @@ def ryb(maps):
     # Es una lista con 5 artists_id al azar
     lista = om.keySet(rybmap)
     size = lt.size(lista)
-    artistslist = get5artists(rybmap, lista, size)
+    artistslist = 10(rybmap, lista, size)
     return reproductions, artistslist, size
 
 
@@ -541,7 +575,7 @@ def rock(maps):
     # Es una lista con 5 artists_id al azar
     lista = om.keySet(rockmap)
     size = lt.size(lista)
-    artistslist = get5artists(rockmap, lista, size)
+    artistslist = 10(rockmap, lista, size)
     return reproductions, artistslist, size
 
 
@@ -570,7 +604,7 @@ def metal(maps):
     # Es una lista con 5 artists_id al azar
     lista = om.keySet(metalmap)
     size = lt.size(lista)
-    artistslist = get5artists(metalmap, lista, size)
+    artistslist = 10(metalmap, lista, size)
     return reproductions, artistslist, size
 
 

@@ -86,21 +86,38 @@ def printReq1(charact, keylo, keyhi, numbers):
     print("=" * columns)
 
 
-def printreq2(keylo1, keyhi1, keylo2, keyhi2, unique):
+def printreq2(keylo1, keyhi1, keylo2, keyhi2, unique, lista):
     print("=" * columns)
     print("\nRsultados: "
-          "\n\tEnergy is between ", str(keylo1), " and", str(keyhi1),
-          "\n\tDanceability is between ", str(keylo2), " and", str(keyhi2),
+          "\n\tEnergy is between", str(keylo1), "and", str(keyhi1),
+          "\n\tDanceability is between", str(keylo2), "and", str(keyhi2),
           "\n\tTotal of unique tracks in events: ", str(unique))
+    print("\n------ Some artists ------")
+    pos = 1
+    for i in lista['elements']:
+        print("Track", str(pos) + ":", i['track_id'], "with",
+              'energy of', i['energy'], 'and danceability of',
+              i['danceability'])
+        pos += 1
     print("=" * columns)
 
 
-def printreq3(keylo1, keyhi1, keylo2, keyhi2, unique):
+def printreq3(keylo1, keyhi1, keylo2, keyhi2, unique, lista):
     print("=" * columns)
     print("\nRsultados: "
-          "\n\tInstrumentalness is between ", str(keylo1), " and", str(keyhi1),
-          "\n\tTempo is between ", str(keylo2), " and", str(keyhi2),
+          "\n\tInstrumentalness is between", str(keylo1), "and", str(keyhi1),
+          "\n\tTempo is between", str(keylo2), "and", str(keyhi2),
           "\n\tTotal of unique tracks in events: ", str(unique))
+    print("\n------ Some artists ------")
+    if lista == 0:
+        print("No hay suficientes elementos para imprimir")
+    else:
+        pos = 1
+        for i in lista['elements']:
+            print("Track", str(pos) + ":", i['track_id'], "with",
+                  'instrumentalness of', i['instrumentalness'],
+                  'and a tempo of', i['tempo'])
+            pos += 1
     print("=" * columns)
 
 
@@ -113,7 +130,7 @@ def printreq4(gender, keylo, keyhi, rep, artists, artlist):
     print("\n------ Some artists for", gender, " ------")
     pos = 1
     for i in artlist['elements']:
-        print("Artist ", str(pos) + ":", i)
+        print("Artist", str(pos) + ":", i)
         pos += 1
 
 
@@ -168,7 +185,10 @@ while True:
         charact = input("Escriba la categoria que desea consultar: ").lower()
         keylo = input("Inserte los valores minimos: ")
         keyhi = input("Inserte los valores maximos: ")
-        if float(keylo) < 0 or float(keyhi) < 0:
+        if1 = float(keylo) < 0
+        if2 = float(keyhi) < 0
+        if3 = float(keylo) > float(keyhi)
+        if if1 or if2 or if3:
             print("\n")
             print("=" * columns)
             print("\n\tLos valores maximos o minimos son menores que 0...")
@@ -195,18 +215,37 @@ while True:
         keyhi2 = input("Inserte los valores maximos de Danceability: ")
         new1 = float(keylo1) < 0 or float(keyhi1) < 0
         new2 = float(keylo2) < 0 or float(keyhi2) < 0
-        if new1 or new2:
+        new3 = float(keylo1) > float(keyhi1)
+        new4 = float(keylo2) > float(keyhi2)
+
+        if new3 or new4:
+            print("\n")
+            print("=" * columns)
+            print("\n\tLos valores minimos son mayores que los maximos...")
+            print("\tPor favor intente nuevamente")
+            print("=" * columns)
+            print("\n")
+
+        elif new1 or new2:
             print("\n")
             print("=" * columns)
             print("\n\tLos valores maximos o minimos son menores que 0...")
             print("\tIntente nuevamente con valores positivos")
             print("=" * columns)
             print("\n")
+
         else:
             tot = controller.partyMusic(cont, float(keylo1),
                                         float(keyhi1), float(keylo2),
                                         float(keyhi2))
-            printreq2(keylo1, keyhi1, keylo2, keyhi2, tot)
+            if tot == 0:
+                print('\n')
+                print('=' * columns)
+                print("\n\tNo se encontraron resultados")
+                print('=' * columns)
+                print('\n')
+            else:
+                printreq2(keylo1, keyhi1, keylo2, keyhi2, tot[0], tot[1])
 
     elif int(inputs[0]) == 5:
         keylo1 = input("Inserte los valores minimos de Instrumentalness: ")
@@ -215,18 +254,37 @@ while True:
         keyhi2 = input("Inserte los valores maximos de Tempo: ")
         new1 = float(keylo1) < 0 or float(keyhi1) < 0
         new2 = float(keylo2) < 0 or float(keyhi2) < 0
-        if new1 or new2:
+        new3 = float(keylo1) > float(keyhi1)
+        new4 = float(keylo2) > float(keyhi2)
+
+        if new3 or new4:
+            print("\n")
+            print("=" * columns)
+            print("\n\tLos valores minimos son mayores que los maximos...")
+            print("\tPor favor intente nuevamente")
+            print("=" * columns)
+            print("\n")
+
+        elif new1 or new2:
             print("\n")
             print("=" * columns)
             print("\n\tLos valores maximos o minimos son menores que 0...")
             print("\tIntente nuevamente con valores positivos")
             print("=" * columns)
             print("\n")
+
         else:
-            tot = controller.studyMusic(cont, float(keylo1),
+            tot = controller.partyMusic(cont, float(keylo1),
                                         float(keyhi1), float(keylo2),
                                         float(keyhi2))
-            printreq3(keylo1, keyhi1, keylo2, keyhi2, tot)
+            if tot == 0:
+                print('\n')
+                print('=' * columns)
+                print("\n\tNo se encontraron resultados")
+                print('=' * columns)
+                print('\n')
+            else:
+                printreq3(keylo1, keyhi1, keylo2, keyhi2, tot[0], tot[1])
 
     elif int(inputs[0]) == 6:
         reggae = controller.reggae(cont)
