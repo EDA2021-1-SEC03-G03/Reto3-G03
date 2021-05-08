@@ -278,8 +278,22 @@ def studyMap(maps, keylo1, keyhi1, keylo2, keyhi2, caract1, caract2):
 
 
 # La funcion studyMap() te ahorra mucho trabajo, preguntame primero J.M
-def req2():
-    return None
+def partyMusic(maps, keylo1, keyhi1, keylo2, keyhi2):
+    '''
+    Recorre en los index de instrumentalness y tempo buscando las
+    opciones dentro del rango que busca el usuario
+    '''
+    caract1 = 'energy'
+    caract2 = 'danceability'
+    easylist = studyMap(maps, keylo1, keyhi1, keylo2, keyhi2, caract1, caract2)
+    tracksMap = mp.newMap(34500,
+                          maptype='PROBING',
+                          loadfactor=0.5)
+    iterator = ite.newIterator(easylist)
+    while ite.hasNext(iterator):
+        events = ite.next(iterator)
+        mp.put(tracksMap, events['track_id'], events)
+    return lt.size(tracksMap)
 
 
 def studyMusic(maps, keylo1, keyhi1, keylo2, keyhi2):

@@ -86,7 +86,16 @@ def printReq1(charact, keylo, keyhi, numbers):
     print("=" * columns)
 
 
-def printreq23(keylo1, keyhi1, keylo2, keyhi2, unique):
+def printreq2(keylo1, keyhi1, keylo2, keyhi2, unique):
+    print("=" * columns)
+    print("\nRsultados: "
+          "\n\Energy is between ", str(keylo1), " and", str(keyhi1),
+          "\n\tDanceability is between ", str(keylo2), " and", str(keyhi2),
+          "\n\tTotal of unique tracks in events: ", str(unique))
+    print("=" * columns)
+
+
+def printreq3(keylo1, keyhi1, keylo2, keyhi2, unique):
     print("=" * columns)
     print("\nRsultados: "
           "\n\tInstrumentalness is between ", str(keylo1), " and", str(keyhi1),
@@ -179,7 +188,22 @@ while True:
                 printReq1(charact, keylo, keyhi, tot)
 
     elif int(inputs[0]) == 4:
-        print('aca va lo tuyo Daniel')
+        keylo1 = input("Inserte los valores minimos de Energy: ")
+        keyhi1 = input("Inserte los valores maximos de Energy: ")
+        keylo2 = input("Inserte los valores minimos de Danceability: ")
+        keyhi2 = input("Inserte los valores maximos de Danceability: ")
+        new1 = float(keylo1) < 0 or float(keyhi1) < 0
+        new2 = float(keylo2) < 0 or float(keyhi2) < 0
+        if new1 or new2:
+            print("\n")
+            print("=" * columns)
+            print("\n\tLos valores maximos o minimos son menores que 0...")
+            print("\tIntente nuevamente con valores positivos")
+            print("=" * columns)
+            print("\n")
+        else:
+            tot = controller.partyMusic(cont, keylo1, keyhi1, keylo2, keyhi2)
+            printreq2(keylo1, keyhi1, keylo2, keyhi2, tot)
 
     elif int(inputs[0]) == 5:
         keylo1 = input("Inserte los valores minimos de Instrumentalness: ")
@@ -197,7 +221,7 @@ while True:
             print("\n")
         else:
             tot = controller.studyMusic(cont, keylo1, keyhi1, keylo2, keyhi2)
-            printreq23(keylo1, keyhi1, keylo2, keyhi2, tot)
+            printreq3(keylo1, keyhi1, keylo2, keyhi2, tot)
 
     elif int(inputs[0]) == 6:
         reggae = controller.reggae(cont)
