@@ -48,6 +48,7 @@ def init():
 #  de datos en los modelos
 # ___________________________________________________
 
+
 def loadData(analyzer, crimesfile):
     """
     Carga los datos de los archivos CSV en el modelo
@@ -57,7 +58,30 @@ def loadData(analyzer, crimesfile):
                                 delimiter=",")
     for event in input_file:
         model.addEvent(analyzer, event)
+
+
+def loadData2(analyzer, files2):
+    '''
+    Carga los datos del CSV de hastags en el modelo
+    '''
+    files = cf.data_dir + files2
+    input_file = csv.DictReader(open(files, encoding="utf-8"),
+                                delimiter=",")
+    for hashtags in input_file:
+        model.updateHashtag(analyzer, hashtags)
+
+
+def loadData3(analyzer, files3):
+    '''
+    Carga los datos del CSV de hastags en el modelo
+    '''
+    files = cf.data_dir + files3
+    input_file = csv.DictReader(open(files, encoding="utf-8"),
+                                delimiter=",")
+    for sentiment in input_file:
+        model.updatevader(analyzer, sentiment)
     return analyzer
+
 
 # ___________________________________________________
 #  Funciones para consultas

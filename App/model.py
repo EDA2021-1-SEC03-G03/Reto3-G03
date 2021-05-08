@@ -66,7 +66,9 @@ def newAnalyzer():
                 'danceability': None,
                 'valence': None,
                 'tempo': None,
-                'hashtag': None
+                'time': None,
+                'hashtag': None,
+                'vader': None
                 }
     # Cambiar el nombre porque son eventos de escucha
 
@@ -92,9 +94,15 @@ def newAnalyzer():
 
     analyzer['tempo'] = om.newMap(omaptype='RBT')
 
-    analyzer['hashtag'] = mp.newMap(numelements=17,
-                                    maptype='CHAINING',
+    analyzer['time'] = om.newMap(omaptype='RBT')
+
+    analyzer['hashtag'] = mp.newMap(numelements=100000,
+                                    maptype='PROBING',
                                     loadfactor=0.5)
+
+    analyzer['vader'] = mp.newMap(numelements=100000,
+                                  maptype='PROBING',
+                                  loadfactor=0.5)
 
     return analyzer
 
@@ -121,7 +129,6 @@ def updateIdIndex(maps, event):
     Se toma El track_id de cada evento y se adiciona al map. 
     Si el track_id del evento ya esta en el arbol, se adiciona
     a su lista respectiva y se actualiza el index.
-
     Si no se encuentra creado un nodo para ese id en el arbol
     se crea y se actualiza el indice del id de las pistas.
     """
@@ -132,7 +139,7 @@ def updateIdIndex(maps, event):
         om.put(maps, eventId, datantry)
     else:
         datantry = me.getValue(entry)
-    addEntry(datantry, event)
+        addEntry(datantry, event)
     return maps
 
 
@@ -152,7 +159,7 @@ def updateartistsIndex(maps, event):
         om.put(maps, eventId, datantry)
     else:
         datantry = me.getValue(entry)
-    addEntry(datantry, event)
+        addEntry(datantry, event)
     return maps
 
 
@@ -164,27 +171,39 @@ def updateContCara(maps, event):
     '''
     # Cada una de las caracteristicas de contenido es un arbol
 
-    caracteristics = ['instrumentalness', 'acousticness',
-                      'liveness', 'speechiness', 'energy',
-                      'danceability', 'valence', 'tempo']
-    for i in caracteristics:
-        entry = om.get(maps[i], float(event[i]))
+    characteristics = ['instrumentalness', 'acousticness',
+                       'liveness', 'speechiness', 'energy',
+                       'danceability', 'valence', 'tempo', 'time']
+    for i in characteristics:
+        if i == 'time':
+            time = event['created_at'].split(' ')
+            timeinseconds = seconds(time[1])
+            entry = om.get(maps[i], timeinseconds)
 
-        if entry is None:
-            datantry = newDataEntry(event)
-            om.put(maps[i], float(event[i]), datantry)
+            if entry is None:
+                datantry = newDataEntry(event)
+                om.put(maps[i], timeinseconds, datantry)
+            else:
+                datantry = me.getValue(entry)
+                addEntry(datantry, event)
         else:
-            datantry = me.getValue(entry)
-        addEntry(datantry, event)
+            entry = om.get(maps[i], float(event[i]))
+
+            if entry is None:
+                datantry = newDataEntry(event)
+                om.put(maps[i], float(event[i]), datantry)
+            else:
+                datantry = me.getValue(entry)
+                addEntry(datantry, event)
     return maps
 
 
-def addEntry(maps, event):
+def addEntry(value, event):
     """
-    Añade un evento a la lista que el valor en cada uno de los
+    Añade un evento a la lista que es valor en cada uno de los
     mapas del analyzer
     """
-    lst = maps['lstevent']
+    lst = value['lstevent']
     lt.addLast(lst, event)
 
 
@@ -196,7 +215,54 @@ def newDataEntry(event):
     entry = {'lstevent': None}
 
     entry['lstevent'] = lt.newList('ARRAY_LIST')
+    lt.addLast(entry['lstevent'], event)
     return entry
+
+
+def updateHashtag(maps, hashtags):
+    '''
+    Actualiza el indice de hashtag que es una tabla de hash.
+    la llave es el user id, esto se hace para poder conectar
+    los diferents archivos que hay.
+    '''
+    entry = mp.get(maps['hashtag'], hashtags['user_id'])
+
+    if entry is None:
+        dataentry = newDataEntry(hashtags)
+        mp.put(maps['hashtag'], hashtags['user_id'], dataentry)
+    else:
+        pair = mp.get(maps['hashtag'], hashtags['user_id'])
+        dataentry = me.getValue(pair)
+        addEntry(dataentry, hashtags)
+    return maps
+
+
+def updatevader(maps, sentiment):
+    '''
+    Actualiza el indice de vader que es una tabla de hash.
+    La llave es el hashtag, esto se hace para poder conectar
+    los diferentes archivos que hay.
+    El valor es toda la informacion.
+    '''
+    entry = mp.get(maps['vader'], sentiment['hashtag'])
+
+    if entry is None:
+        dataentry = newDataEntry(sentiment)
+        mp.put(maps['vader'], sentiment['hashtag'], dataentry)
+    else:
+        pair = mp.get(maps['vader'], sentiment['hashtag'])
+        dataentry = me.getValue(pair)
+        addEntry(dataentry, sentiment)
+    return maps
+
+
+def seconds(time):
+    long = time.split(':')
+    hours = int(long[0])
+    minutes = int(long[1])
+    seconds = int(long[2])
+
+    return (hours * 3600) + (minutes * 60) + seconds
 
 
 # ==============================

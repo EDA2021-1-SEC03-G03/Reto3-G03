@@ -37,10 +37,15 @@ operación solicitada
 #  Ruta a los archivos y tamaño consola
 # ___________________________________________________
 
+
 columns = os.get_terminal_size().columns
 
 file = 'context_content_features-small.csv'
+files2 = 'user_track_hashtag_timestamp-small.csv'
+files3 = 'sentiment_values.csv'
 cont = None
+
+
 # ___________________________________________________
 #  Menu principal
 # ___________________________________________________
@@ -149,6 +154,8 @@ while True:
         print('=' * columns)
         print("Cargando información de las pistas ....")
         controller.loadData(cont, file)
+        controller.loadData2(cont, files2)
+        controller.loadData3(cont, files3)
         print('\nTotal de eventos cargados: ' +
               str(controller.sizeEvents(cont)))
         print('\nInstrumentalness altura: ' +
