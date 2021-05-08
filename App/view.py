@@ -86,7 +86,7 @@ def printReq1(charact, keylo, keyhi, numbers):
     print("=" * columns)
 
 
-def printreq3(keylo1, keyhi1, keylo2, keyhi2, unique):
+def printreq23(keylo1, keyhi1, keylo2, keyhi2, unique):
     print("=" * columns)
     print("\nRsultados: "
           "\n\tInstrumentalness is between ", str(keylo1), " and", str(keyhi1),
@@ -97,8 +97,8 @@ def printreq3(keylo1, keyhi1, keylo2, keyhi2, unique):
 
 def printreq4(gender, keylo, keyhi, rep, artists, artlist):
     print("================ ", gender.upper(), " ================")
-    print("For", gender, "the tempo is between", keylo, "and", keyhi,
-          " BPM")
+    print("For", gender, "the tempo is between", float(keylo), "and",
+          float(keyhi), " BPM")
     print(gender, " reproductions:", rep, "with", artists,
           " different artists")
     print("\n------ Some artists for", gender, " ------")
@@ -197,7 +197,7 @@ while True:
             print("\n")
         else:
             tot = controller.studyMusic(cont, keylo1, keyhi1, keylo2, keyhi2)
-            printreq3(keylo1, keyhi1, keylo2, keyhi2, tot)
+            printreq23(keylo1, keyhi1, keylo2, keyhi2, tot)
 
     elif int(inputs[0]) == 6:
         reggae = controller.reggae(cont)

@@ -65,7 +65,8 @@ def newAnalyzer():
                 'energy': None,
                 'danceability': None,
                 'valence': None,
-                'tempo': None
+                'tempo': None,
+                'hashtag': None
                 }
     # Cambiar el nombre porque son eventos de escucha
 
@@ -90,6 +91,10 @@ def newAnalyzer():
     analyzer['valence'] = om.newMap(omaptype='RBT')
 
     analyzer['tempo'] = om.newMap(omaptype='RBT')
+
+    analyzer['hashtag'] = mp.newMap(numelements=17,
+                                    maptype='CHAINING',
+                                    oadfactor=0.5)
 
     return analyzer
 
