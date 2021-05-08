@@ -181,7 +181,7 @@ def updateContCara(maps, event):
 
 def addEntry(maps, event):
     """
-    Añade un evento a la lista que el valor en cada uno de los
+    Añade un evento a la lista que es valor en cada uno de los
     mapas del analyzer
     """
     lst = maps['lstevent']
@@ -272,9 +272,9 @@ def get10artists(artistmap, lista, size):
 
 def studyMap(maps, keylo1, keyhi1, keylo2, keyhi2, caract1, caract2):
     '''
-    Busca dentro del mapa de deseado, en un rango
+    Busca dentro del mapa deseado, en un rango
     especificado por el usuario, los eventos con una pista
-    unica que cumplen el rango de tempo para estudiar.
+    unica que cumplen el rango especificado.
     '''
     # Aca se organizaran los eventos por segunda vez
     eventsmap = om.newMap(omaptype='RBT')
@@ -293,7 +293,6 @@ def studyMap(maps, keylo1, keyhi1, keylo2, keyhi2, caract1, caract2):
         return om.values(eventsmap, keylo2, keyhi2)
 
 
-# La funcion studyMap() te ahorra mucho trabajo, preguntame primero J.M
 def partyMusic(maps, keylo1, keyhi1, keylo2, keyhi2):
     '''
     Recorre en los index de Energy y da buscando las
