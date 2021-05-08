@@ -613,33 +613,3 @@ def leastMaxElements(analyzer):
         i += 1
 
     return (leastList, greaterList)
-
-
-# ==============================
-# Funciones de Comparacion
-# ==============================
-
-
-def compareIds(id1, id2):
-    """
-    Compara dos id's de los eventos
-    """
-    if (id1 == id2):
-        return 0
-    elif id1 > id2:
-        return 1
-    else:
-        return -1
-
-
-def compareValue(value1, value2):
-    """
-    Compara dos valores del evento segun la
-    caracteristica de contenido
-    """
-    if (value1 == value2):
-        return 0
-    elif value1 > value2:
-        return 1
-    else:
-        return -1
