@@ -54,7 +54,7 @@ def printMenu():
     print("1- Inicializar Analizador")
     print("2- Cargar la información al Analizador")
     print("3- Consultar los eventos y artistas por una categoria")
-    print("4- Req Daniel")
+    print("4- Consultar Música para irse de farra")
     print("5- Consultar Música para estudiar ")
     print("6- Consultar eventos por genero")
     print("7- Esperate we ")
