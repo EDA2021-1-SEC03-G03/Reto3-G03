@@ -111,7 +111,7 @@ def caracterizeRep(maps, characteristic, keylo, keyhi):
 
 
 def partyMusic(maps, keylo1, keyhi1, keylo2, keyhi2):
-    return model.studyMusic(maps, keylo1, keyhi1, keylo2, keyhi2)
+    return model.partyMusic(maps, keylo1, keyhi1, keylo2, keyhi2)
 
 
 def studyMusic(maps, keylo1, keyhi1, keylo2, keyhi2):

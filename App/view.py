@@ -89,7 +89,7 @@ def printReq1(charact, keylo, keyhi, numbers):
 def printreq2(keylo1, keyhi1, keylo2, keyhi2, unique):
     print("=" * columns)
     print("\nRsultados: "
-          "\n\Energy is between ", str(keylo1), " and", str(keyhi1),
+          "\n\tEnergy is between ", str(keylo1), " and", str(keyhi1),
           "\n\tDanceability is between ", str(keylo2), " and", str(keyhi2),
           "\n\tTotal of unique tracks in events: ", str(unique))
     print("=" * columns)
@@ -177,7 +177,8 @@ while True:
             print("=" * columns)
 
         else:
-            tot = controller.caracterizeRep(cont, charact, keylo, keyhi)
+            tot = controller.caracterizeRep(cont, charact,
+                                            float(keylo), float(keyhi))
             if tot == 0:
                 print("\n")
                 print("=" * columns)
@@ -202,7 +203,9 @@ while True:
             print("=" * columns)
             print("\n")
         else:
-            tot = controller.partyMusic(cont, keylo1, keyhi1, keylo2, keyhi2)
+            tot = controller.partyMusic(cont, float(keylo1),
+                                        float(keyhi1), float(keylo2),
+                                        float(keyhi2))
             printreq2(keylo1, keyhi1, keylo2, keyhi2, tot)
 
     elif int(inputs[0]) == 5:
@@ -220,7 +223,9 @@ while True:
             print("=" * columns)
             print("\n")
         else:
-            tot = controller.studyMusic(cont, keylo1, keyhi1, keylo2, keyhi2)
+            tot = controller.studyMusic(cont, float(keylo1),
+                                        float(keyhi1), float(keylo2),
+                                        float(keyhi2))
             printreq3(keylo1, keyhi1, keylo2, keyhi2, tot)
 
     elif int(inputs[0]) == 6:

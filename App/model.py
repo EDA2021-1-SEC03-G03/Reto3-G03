@@ -273,7 +273,7 @@ def studyMap(maps, keylo1, keyhi1, keylo2, keyhi2, caract1, caract2):
         newiterator = ite.newIterator(events['lstevent'])
         while ite.hasNext(newiterator):
             event = ite.next(newiterator)
-            om.put(eventsmap, event[caract2], event)
+            om.put(eventsmap, float(event[caract2]), event)
     return om.values(eventsmap, keylo2, keyhi2)
 
 
@@ -283,9 +283,8 @@ def partyMusic(maps, keylo1, keyhi1, keylo2, keyhi2):
     Recorre en los index de instrumentalness y tempo buscando las
     opciones dentro del rango que busca el usuario
     '''
-    caract1 = 'energy'
-    caract2 = 'danceability'
-    easylist = studyMap(maps, keylo1, keyhi1, keylo2, keyhi2, caract1, caract2)
+    easylist = studyMap(maps, keylo1, keyhi1, keylo2, keyhi2,
+                        'energy', 'danceability')
     tracksMap = mp.newMap(34500,
                           maptype='PROBING',
                           loadfactor=0.5)
