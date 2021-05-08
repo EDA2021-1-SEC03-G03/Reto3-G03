@@ -116,8 +116,8 @@ def addEvent(analyzer, event):
 
 def updateIdIndex(maps, event):
     """
-    Se toma El track_id de cada evento y se adiciona al map
-    . Si el track_id del evento ya esta en el arbol, se adiciona
+    Se toma El track_id de cada evento y se adiciona al map. 
+    Si el track_id del evento ya esta en el arbol, se adiciona
     a su lista respectiva y se actualiza el index.
 
     Si no se encuentra creado un nodo para ese id en el arbol
@@ -158,9 +158,9 @@ def updateContCara(maps, event):
     '''
     Actualiza los arboles de cada una de las carateristicas de
     contenido. Agrega una lista con todos los eventos de escucha
-    al arbol dependiendo del valor que estos tienen en esa carateristica.
+    al arbol dependiendo del valor que estos tienen en esa caracteristica.
     '''
-    # Cada una de las caraccteristicas de contenido es un arbol
+    # Cada una de las caracteristicas de contenido es un arbol
 
     caracteristics = ['instrumentalness', 'acousticness',
                       'liveness', 'speechiness', 'energy',
