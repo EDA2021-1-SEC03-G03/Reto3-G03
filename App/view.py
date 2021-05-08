@@ -56,7 +56,7 @@ def printMenu():
     print("3- Consultar los eventos y artistas por una categoria")
     print("4- Req Daniel")
     print("5- Consultar Música para estudiar ")
-    print("6- Aun no ")
+    print("6- Consultar eventos por genero")
     print("7- Esperate we ")
     print("0- Salir")
     print("*" * columns)

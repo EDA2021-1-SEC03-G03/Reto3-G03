@@ -94,7 +94,7 @@ def newAnalyzer():
 
     analyzer['hashtag'] = mp.newMap(numelements=17,
                                     maptype='CHAINING',
-                                    oadfactor=0.5)
+                                    loadfactor=0.5)
 
     return analyzer
 
