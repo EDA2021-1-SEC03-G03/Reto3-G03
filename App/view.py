@@ -152,6 +152,7 @@ while True:
         elements = controller.leastMaxElements(cont)
         printFirstsLastsElements(elements[0],
                                  elements[1])
+        print('\n')
         print('=' * columns)
 
     elif int(inputs[0]) == 3:
