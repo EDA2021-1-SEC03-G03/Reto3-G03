@@ -158,6 +158,14 @@ def printreq5(init, final, reps, genrelist, genderlist, first):
           first[0], 'with', first[1], 'reproductions...\n')
 
     print("============= GENRES SORTE REPRODUCTIONS =============")
+    j = 1
+    for i in genderlist['elements']:
+        if j == 10:
+            break
+        else:
+            print('TOP', j, 'track' + ':', i[0], 'with',
+                  i[1], 'hashtags and VADER =', i[2])
+            j += 1
 
 
 """
@@ -364,7 +372,7 @@ while True:
             values = controller.getgenre(tot[1], first, cont['hashtag'],
                                          cont['vader'])
             thelist = controller.sortreq5(values)
-            printreq5(time1, time2, tot[0], genres, None, first)
+            printreq5(time1, time2, tot[0], genres, thelist, first)
 
     else:
         sys.exit(0)

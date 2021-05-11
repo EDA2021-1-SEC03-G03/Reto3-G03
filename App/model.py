@@ -759,8 +759,14 @@ def getgenres(maps):
 
 def getgenre(maps, genretuple, table, table2):
     '''
+    Funcion que define el genero que mas reproducciones tiene.
+    despues busca los hashtags que tiene cada track dentro del
+    genero top y retorna una lista con el track, la cantidad de
+    hashtags que tiene y el vader promedio.
     '''
+    # Se guarda la informacion de los videos por tracks_id
     newmap = om.newMap(omaptype='RBT')
+    # Busca cual es el genero que es el top
     if genretuple[0] == "Reggae":
         value = om.values(maps, 60, 90)
     elif genretuple[0] == "Down-tempo":
@@ -780,6 +786,7 @@ def getgenre(maps, genretuple, table, table2):
     elif genretuple[0] == "Metal":
         value = om.values(maps, 100, 160)
 
+    # Recorre la lista de valores del genero top
     iterator = ite.newIterator(value)
     while ite.hasNext(iterator):
         eventslist = ite.next(iterator)
@@ -794,36 +801,47 @@ def getgenre(maps, genretuple, table, table2):
                 dataentry = me.getValue(entry)
                 addEntry(dataentry, event)
 
+    # se crea una lista con todos los tracks_id
     tracksid = om.keySet(newmap)
     finallist = lt.newList("ARRAY_LIST")
+    '''
+    Se recorren cada uno de los id para sacar la informacion
+    y compararla con el mapa de hashtags
+    '''
     tracksiterator = ite.newIterator(tracksid)
     while ite.hasNext(tracksiterator):
         info = ite.next(tracksiterator)
         entry = mp.get(table, info)
         entryvalue = me.getValue(entry)
+        # Es una tabla de has temporal donde se guardan los hashtags
         hasht = mp.newMap(numelements=15, maptype='PROBING',
                           loadfactor=0.5)
         newiterator = ite.newIterator(entryvalue['lstevent'])
+        # Aca se comenzaran a sumar los vaders
+        sumvader = 0
         while ite.hasNext(newiterator):
             trackhash = ite.next(newiterator)
             hashtag = trackhash['hashtag'].lower()
             mp.put(hasht, hashtag, 0)
+            # Se saca la informacion de la tabal de vader
             vader = mp.get(table2, hashtag)
             if vader is None:
                 break
             else:
                 vadevalue = me.getValue(vader)
                 juandiego = ite.newIterator(vadevalue['lstevent'])
-                sumvader = 0
+                
                 while ite.hasNext(juandiego):
                     pos = ite.next(juandiego)
+                    # Hay valores de vader que no existen
                     if pos['vader_avg'] == '':
-                        break
+                        sumvader += 0
                     else:
                         averagevader = float(pos['vader_avg'])
                         sumvader += averagevader
         nohash = mp.size(hasht)
-        avgvader = sumvader / nohash
+        # Se saca el promedio de vader
+        avgvader = round(sumvader / nohash, 1)
         lt.addLast(finallist, (info, nohash, avgvader))
     return finallist
 
