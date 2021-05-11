@@ -27,6 +27,7 @@
 
 import config as cf
 import random
+from DISClib.Algorithms.Sorting import quicksort as qs
 from DISClib.ADT import list as lt
 from DISClib.ADT import orderedmap as om
 from DISClib.ADT import map as mp
@@ -222,16 +223,16 @@ def newDataEntry(event):
 def updateHashtag(maps, hashtags):
     '''
     Actualiza el indice de hashtag que es una tabla de hash.
-    la llave es el user id, esto se hace para poder conectar
+    la llave es el track id, esto se hace para poder conectar
     los diferents archivos que hay.
     '''
-    entry = mp.get(maps['hashtag'], hashtags['user_id'])
+    entry = mp.get(maps['hashtag'], hashtags['track_id'])
 
     if entry is None:
         dataentry = newDataEntry(hashtags)
-        mp.put(maps['hashtag'], hashtags['user_id'], dataentry)
+        mp.put(maps['hashtag'], hashtags['track_id'], dataentry)
     else:
-        pair = mp.get(maps['hashtag'], hashtags['user_id'])
+        pair = mp.get(maps['hashtag'], hashtags['track_id'])
         dataentry = me.getValue(pair)
         addEntry(dataentry, hashtags)
     return maps
@@ -437,7 +438,7 @@ def reggae(maps):
     # Es una lista con 5 artists_id al azar
     lista = om.keySet(reggaemap)
     size = lt.size(lista)
-    artistslist = 10(reggaemap, lista, size)
+    artistslist = get10artists(reggaemap, lista, size)
     return reproductions, artistslist, size
 
 
@@ -466,7 +467,7 @@ def down(maps):
     # Es una lista con 5 artists_id al azar
     lista = om.keySet(downmap)
     size = lt.size(lista)
-    artistslist = 10(downmap, lista, size)
+    artistslist = get10artists(downmap, lista, size)
     return reproductions, artistslist, size
 
 
@@ -495,7 +496,7 @@ def chill(maps):
     # Es una lista con 5 artists_id al azar
     lista = om.keySet(chillmap)
     size = lt.size(lista)
-    artistslist = 10(chillmap, lista, size)
+    artistslist = get10artists(chillmap, lista, size)
     return reproductions, artistslist, size
 
 
@@ -524,7 +525,7 @@ def hiphop(maps):
     # Es una lista con 5 artists_id al azar
     lista = om.keySet(hiphopmap)
     size = lt.size(lista)
-    artistslist = 10(hiphopmap, lista, size)
+    artistslist = get10artists(hiphopmap, lista, size)
     return reproductions, artistslist, size
 
 
@@ -553,7 +554,7 @@ def jazzfunk(maps):
     # Es una lista con 5 artists_id al azar
     lista = om.keySet(jazzfunkmap)
     size = lt.size(lista)
-    artistslist = 10(jazzfunkmap, lista, size)
+    artistslist = get10artists(jazzfunkmap, lista, size)
     return reproductions, artistslist, size
 
 
@@ -582,7 +583,7 @@ def pop(maps):
     # Es una lista con 5 artists_id al azar
     lista = om.keySet(popmap)
     size = lt.size(lista)
-    artistslist = 10(popmap, lista, size)
+    artistslist = get10artists(popmap, lista, size)
     return reproductions, artistslist, size
 
 
@@ -611,7 +612,7 @@ def ryb(maps):
     # Es una lista con 5 artists_id al azar
     lista = om.keySet(rybmap)
     size = lt.size(lista)
-    artistslist = 10(rybmap, lista, size)
+    artistslist = get10artists(rybmap, lista, size)
     return reproductions, artistslist, size
 
 
@@ -640,7 +641,7 @@ def rock(maps):
     # Es una lista con 5 artists_id al azar
     lista = om.keySet(rockmap)
     size = lt.size(lista)
-    artistslist = 10(rockmap, lista, size)
+    artistslist = get10artists(rockmap, lista, size)
     return reproductions, artistslist, size
 
 
@@ -669,8 +670,134 @@ def metal(maps):
     # Es una lista con 5 artists_id al azar
     lista = om.keySet(metalmap)
     size = lt.size(lista)
-    artistslist = 10(metalmap, lista, size)
+    artistslist = get10artists(metalmap, lista, size)
     return reproductions, artistslist, size
+
+
+def musicInTime(maps, time1, time2):
+    '''
+    Funcion que busca los eventos en un rango de tiempo.
+    retorna la cantidad de eventos de escucha totales y
+    un mapa con los eventos
+    '''
+    init = seconds(time1)
+    final = seconds(time2)
+    if init < 0 or final < 0:
+        return 0
+    else:
+        # thelist = lt.newList("ARRAY_LIST")
+        themap = om.newMap(omaptype='RBT')
+        eventsq = 0
+        # Sacamos lo eventos en el rango deseado por el usuario
+        getusers = om.values(maps['time'], init, final)
+        # Recorremos la lista de las listas de los eventos
+        iterator = ite.newIterator(getusers)
+        while ite.hasNext(iterator):
+            eventslist = ite.next(iterator)
+            # Para encontrar el numero total de eventos en el rango
+            newiterator = ite.newIterator(eventslist['lstevent'])
+            while ite.hasNext(newiterator):
+                event = ite.next(newiterator)
+                eventsq += 1
+                entry = om.get(themap, float(event['tempo']))
+                if entry is None:
+                    dataentry = newDataEntry(event)
+                    om.put(themap, float(event['tempo']), dataentry)
+                else:
+                    dataentry = me.getValue(entry)
+                    addEntry(dataentry, event)
+        return eventsq, themap
+
+
+def getgenres(maps):
+    '''
+    funcion que encuentra la cantidad de reproducciones por genero
+    '''
+    thehash = lt.newList("ARRAY_LIST")
+
+    reggae = om.values(maps, 60, 90)
+    reggaesize = getsize(reggae)
+    lt.addLast(thehash, ('Reggae', reggaesize))
+
+    down = om.values(maps, 70, 100)
+    downsize = getsize(down)
+    lt.addLast(thehash, ('Down-tempo', downsize))
+
+    chill = om.values(maps, 90, 120)
+    chillsize = getsize(chill)
+    lt.addLast(thehash, ('Chill-out', chillsize))
+
+    hiphop = om.values(maps, 85, 115)
+    hiphopsize = getsize(hiphop)
+    lt.addLast(thehash, ('Hip-hop', hiphopsize))
+
+    jazzfunk = om.values(maps, 120, 125)
+    jazzfunksize = getsize(jazzfunk)
+    lt.addLast(thehash, ('Jazz and Funk', jazzfunksize))
+
+    pop = om.values(maps, 100, 130)
+    popsize = getsize(pop)
+    lt.addLast(thehash, ('Pop', popsize))
+
+    ryb = om.values(maps, 60, 80)
+    rybsize = getsize(ryb)
+    lt.addLast(thehash, ('R&B', rybsize))
+
+    rock = om.values(maps, 110, 140)
+    rocksize = getsize(rock)
+    lt.addLast(thehash, ('Rock', rocksize))
+
+    metal = om.values(maps, 100, 160)
+    metalsize = getsize(metal)
+    lt.addLast(thehash, ('Metal', metalsize))
+
+    thehash = sortgenres(thehash)
+
+    return thehash
+
+
+def getgenre(maps, genretuple, table):
+    '''
+    '''
+    newmap = om.newMap(omaptype='RBT')
+    if genretuple[0] == "Reggae":
+        value = om.values(maps, 60, 90)
+    elif genretuple[0] == "Down-tempo":
+        value = om.values(maps, 70, 100)
+    elif genretuple[0] == "Chill-out":
+        value = om.values(maps, 90, 120)
+    elif genretuple[0] == "Hip-hop":
+        value = om.values(maps, 85, 115)
+    elif genretuple[0] == "Jazz and Funk":
+        value = om.values(maps, 120, 125)
+    elif genretuple[0] == "Pop":
+        value = om.values(maps, 100, 130)
+    elif genretuple[0] == "R&B":
+        value = om.values(maps, 60, 80)
+    elif genretuple[0] == "Rock":
+        value = om.values(maps, 110, 140)
+    elif genretuple[0] == "Metal":
+        value = om.values(maps, 100, 160)
+
+    iterator = ite.newIterator(value)
+    while ite.hasNext(iterator):
+        eventslist = ite.next(iterator)
+        newiterator = ite.newIterator(eventslist['lstevent'])
+        while ite.hasNext(newiterator):
+            event = ite.next(newiterator)
+            entry = om.get(newmap, event['track_id'])
+            if entry is None:
+                dataentry = newDataEntry(event)
+                om.put(newmap, event['track_id'], event)
+            else:
+                dataentry = me.getValue(entry)
+                addEntry(dataentry, event)
+
+    tracksid = om.keySet(newmap)
+
+    i = 1
+    tracksiterator = ite.newIterator(tracksid)
+    while ite.hasNext(tracksiterator) and i <= 10:
 
 
 def sizeEvents(analyzer):
@@ -725,3 +852,32 @@ def leastMaxElements(analyzer):
         i += 1
 
     return (leastList, greaterList)
+
+
+def getsize(lista):
+    '''
+    Funcion que saca que size de una lista de listas de eventos
+    '''
+    eventsq = 0
+    iterator = ite.newIterator(lista)
+    while ite.hasNext(iterator):
+        eventslist = ite.next(iterator)
+        eventsq += lt.size(eventslist['lstevent'])
+    return eventsq
+
+
+def sortgenres(table):
+    if lt.isEmpty(table):
+        newlist = 0
+    else:
+        newlist = qs.sort(table, cmpGenresByreps)
+    return newlist
+
+
+# ==============================
+# Funciones de comparacion
+# ==============================
+
+
+def cmpGenresByreps(event1, event2):
+    return (event1[1] > event2[1])

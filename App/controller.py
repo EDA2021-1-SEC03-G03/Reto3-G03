@@ -131,48 +131,98 @@ def leastMaxElements(analyzer):
 
 
 def caracterizeRep(maps, characteristic, keylo, keyhi):
+    '''
+    Eventos de escucha por categoria
+    '''
     return model.caracterizeReproductions(maps, characteristic, keylo, keyhi)
 
 
 def partyMusic(maps, keylo1, keyhi1, keylo2, keyhi2):
+    '''
+    Musica para irse de farra
+    '''
     return model.partyMusic(maps, keylo1, keyhi1, keylo2, keyhi2)
 
 
 def studyMusic(maps, keylo1, keyhi1, keylo2, keyhi2):
+    '''
+    Musica para estudiar
+    '''
     return model.studyMusic(maps, keylo1, keyhi1, keylo2, keyhi2)
 
 
 def reggae(maps):
+    '''
+    Eventos de reggea
+    '''
     return model.reggae(maps)
 
 
 def down(maps):
+    '''
+    Eventos de Down-tempo
+    '''
     return model.down(maps)
 
 
 def chill(maps):
+    '''
+    Eventos de Chill-out
+    '''
     return model.chill(maps)
 
 
 def hiphop(maps):
+    '''
+    Eventos de Hip-hop
+    '''
     return model.hiphop(maps)
 
 
 def jazzfunk(maps):
+    '''
+    Eventos de Jazz and funk
+    '''
     return model.jazzfunk(maps)
 
 
 def pop(maps):
+    '''
+    Eventos de Pop
+    '''
     return model.pop(maps)
 
 
 def ryb(maps):
+    '''
+    Eventos de R&B
+    '''
     return model.ryb(maps)
 
 
 def rock(maps):
+    '''
+    Eventos de Rock
+    '''
     return model.rock(maps)
 
 
 def metal(maps):
+    '''
+    Eventos de Metal
+    '''
     return model.metal(maps)
+
+
+def musicInTime(maps, time1, time2):
+    '''
+    Musica en un rango de tiempo determinado
+    '''
+    return model.musicInTime(maps, time1, time2)
+
+
+def getgenres(maps):
+    '''
+    Tabla de hash con los generos y sus reproducciones
+    '''
+    return model.getgenres(maps)

@@ -23,6 +23,8 @@ import os
 import config as cf
 import sys
 import controller
+from DISClib.DataStructures import listiterator as ite
+from DISClib.ADT import list as lt
 assert cf
 
 
@@ -62,7 +64,7 @@ def printMenu():
     print("4- Consultar Música para irse de farra")
     print("5- Consultar Música para estudiar ")
     print("6- Consultar eventos por genero")
-    print("7- Esperate we ")
+    print("7- Género musical más escuchado en el tiempo")
     print("0- Salir")
     print("*" * columns)
 
@@ -87,7 +89,7 @@ def printReq1(charact, keylo, keyhi, numbers):
     print("\nRsultados: \n\t",
           charact.capitalize(), " is between ", str(keylo), " and", str(keyhi),
           "\n\tTotal of reproductions: ", str(numbers[0]),
-          "\n\tTotal of unique artists: ", str(numbers[1]))
+          "\n\tTotal of unique artists: ", str(numbers[1], '\n'))
     print("=" * columns)
 
 
@@ -137,6 +139,25 @@ def printreq4(gender, keylo, keyhi, rep, artists, artlist):
     for i in artlist['elements']:
         print("Artist", str(pos) + ":", i)
         pos += 1
+
+
+def printreq5(init, final, reps, genrelist, genderlist, first):
+    print("=" * columns)
+    print('\nThere is a total of', reps, 'reproductions between',
+          init, 'and', final)
+
+    print("============= GENRES SORTED REPRODUCTIONS =============")
+    i = 0
+    iterator = ite.newIterator(genrelist)
+    while ite.hasNext(iterator):
+        pos = ite.next(iterator)
+        print('TOP', str(i) + ':', pos[0], 'with', pos[1], 'reps')
+        i += 1
+    print('\n')
+    print('The TOP GENRE is',
+          first[0], 'with', first[1], 'reproductions...\n')
+
+    print("============= GENRES SORTE REPRODUCTIONS =============")
 
 
 """
@@ -325,6 +346,22 @@ while True:
         printreq4("Metal", 100, 160, metal[0], metal[2], metal[1])
         print("\n")
         print("=" * columns)
+
+    elif int(inputs[0]) == 7:
+        print('\t--- El formato es HH:MM:SS ---')
+        time1 = input("Ingrese el valor minimo de la hora del dia: ")
+        time2 = input("Ingrese el valor maximo de la hora del dia: ")
+        tot = controller.musicInTime(cont, time1, time2)
+        if tot == 0:
+            print('\n')
+            print('=' * columns)
+            print("Por favor ingrese horas del dia positivas")
+            print('\n')
+            print('=' * columns)
+        else:
+            genres = controller.getgenres(tot[1])
+            first = lt.firstElement(genres)
+            printreq5(time1, time2, tot[0], genres, None, first)
 
     else:
         sys.exit(0)
