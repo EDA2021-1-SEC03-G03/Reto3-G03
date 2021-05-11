@@ -361,6 +361,9 @@ while True:
         else:
             genres = controller.getgenres(tot[1])
             first = lt.firstElement(genres)
+            values = controller.getgenre(tot[1], first, cont['hashtag'],
+                                         cont['vader'])
+            thelist = controller.sortreq5(values)
             printreq5(time1, time2, tot[0], genres, None, first)
 
     else:

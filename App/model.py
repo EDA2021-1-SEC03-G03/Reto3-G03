@@ -28,6 +28,7 @@
 import config as cf
 import random
 from DISClib.Algorithms.Sorting import quicksort as qs
+from DISClib.Algorithms.Sorting import shellsort as she
 from DISClib.ADT import list as lt
 from DISClib.ADT import orderedmap as om
 from DISClib.ADT import map as mp
@@ -245,13 +246,13 @@ def updatevader(maps, sentiment):
     los diferentes archivos que hay.
     El valor es toda la informacion.
     '''
-    entry = mp.get(maps['vader'], sentiment['hashtag'])
+    entry = mp.get(maps['vader'], sentiment['hashtag'].lower())
 
     if entry is None:
         dataentry = newDataEntry(sentiment)
-        mp.put(maps['vader'], sentiment['hashtag'], dataentry)
+        mp.put(maps['vader'], sentiment['hashtag'].lower(), dataentry)
     else:
-        pair = mp.get(maps['vader'], sentiment['hashtag'])
+        pair = mp.get(maps['vader'], sentiment['hashtag'].lower())
         dataentry = me.getValue(pair)
         addEntry(dataentry, sentiment)
     return maps
@@ -756,7 +757,7 @@ def getgenres(maps):
     return thehash
 
 
-def getgenre(maps, genretuple, table):
+def getgenre(maps, genretuple, table, table2):
     '''
     '''
     newmap = om.newMap(omaptype='RBT')
@@ -788,16 +789,43 @@ def getgenre(maps, genretuple, table):
             entry = om.get(newmap, event['track_id'])
             if entry is None:
                 dataentry = newDataEntry(event)
-                om.put(newmap, event['track_id'], event)
+                om.put(newmap, event['track_id'], dataentry)
             else:
                 dataentry = me.getValue(entry)
                 addEntry(dataentry, event)
 
     tracksid = om.keySet(newmap)
-
-    i = 1
+    finallist = lt.newList("ARRAY_LIST")
     tracksiterator = ite.newIterator(tracksid)
-    while ite.hasNext(tracksiterator) and i <= 10:
+    while ite.hasNext(tracksiterator):
+        info = ite.next(tracksiterator)
+        entry = mp.get(table, info)
+        entryvalue = me.getValue(entry)
+        hasht = mp.newMap(numelements=15, maptype='PROBING',
+                          loadfactor=0.5)
+        newiterator = ite.newIterator(entryvalue['lstevent'])
+        while ite.hasNext(newiterator):
+            trackhash = ite.next(newiterator)
+            hashtag = trackhash['hashtag'].lower()
+            mp.put(hasht, hashtag, 0)
+            vader = mp.get(table2, hashtag)
+            if vader is None:
+                break
+            else:
+                vadevalue = me.getValue(vader)
+                juandiego = ite.newIterator(vadevalue['lstevent'])
+                sumvader = 0
+                while ite.hasNext(juandiego):
+                    pos = ite.next(juandiego)
+                    if pos['vader_avg'] == '':
+                        break
+                    else:
+                        averagevader = float(pos['vader_avg'])
+                        sumvader += averagevader
+        nohash = mp.size(hasht)
+        avgvader = sumvader / nohash
+        lt.addLast(finallist, (info, nohash, avgvader))
+    return finallist
 
 
 def sizeEvents(analyzer):
@@ -874,10 +902,21 @@ def sortgenres(table):
     return newlist
 
 
+def sortreq5(lista):
+    if lt.isEmpty(lista):
+        lt.newList = 0
+    else:
+        newlist = she.sort(lista, cmpHashtagbyGenres)
+    return newlist
+
 # ==============================
 # Funciones de comparacion
 # ==============================
 
 
 def cmpGenresByreps(event1, event2):
+    return (event1[1] > event2[1])
+
+
+def cmpHashtagbyGenres(event1, event2):
     return (event1[1] > event2[1])

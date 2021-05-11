@@ -226,3 +226,11 @@ def getgenres(maps):
     Tabla de hash con los generos y sus reproducciones
     '''
     return model.getgenres(maps)
+
+
+def getgenre(maps, genretuple, table, table2):
+    return model.getgenre(maps, genretuple, table, table2)
+
+
+def sortreq5(lista):
+    return model.sortreq5(lista)
